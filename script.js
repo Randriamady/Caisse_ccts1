@@ -1,26 +1,6 @@
 // ================= CONFIGURATION =================
-// Vérification que CONFIG est défini (config.js doit être chargé avant)
-if (typeof CONFIG === 'undefined') {
-  alert('Erreur : fichier de configuration manquant. Créez config.js à partir de config.example.js');
-  throw new Error('CONFIG is not defined');
-}
-
-const API_BASE = CONFIG.API_URL;
-const ACCESS_CODE = CONFIG.ACCESS_CODE;
-const AUTO_REFRESH_INTERVAL = 30000; // 30 secondes
-
-// ================= PROXY CORS =================
-// Construit l'URL proxyfiée pour une action donnée
-function getProxiedUrl(action, method = 'GET') {
-  const target = API_BASE + "?action=" + action;
-  // Utilise corsproxy.io qui fonctionne bien pour GET et POST simples
-  return "https://corsproxy.io/?" + encodeURIComponent(target);
-}
-
-// Pour les requêtes POST (update, add), il est parfois nécessaire
-// d'utiliser un proxy qui supporte mieux les requêtes complexes.
-// Si vous rencontrez des erreurs avec POST, décommentez la ligne suivante :
-// function getProxiedUrl(action) { return "https://api.allorigins.win/raw?url=" + encodeURIComponent(API_BASE + "?action=" + action); }
+const API_URL = "https://script.google.com/macros/s/AKfycbwKCnS8t9sUpOCRKy7qOVWosBm0c2jrMe9iIr_FYxQc_uu7mPlNv7x9kdccky2rleoPMw/exec";
+const AUTO_REFRESH_INTERVAL = 2000; // 30 secondes
 
 // ================= ÉTAT GLOBAL =================
 let caisseData = [];
@@ -85,7 +65,7 @@ function setupIframe() {
 // ================= AUTHENTIFICATION =================
 function setupAuth() {
   document.getElementById('loginBtn').onclick = () => {
-    if (prompt('Code d\'accès :') === ACCESS_CODE) {
+    if (prompt('Code d\'accès :') === '1234') {
       document.getElementById('app').style.display = 'flex';
       document.getElementById('loginBtn').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'inline-flex';
@@ -143,14 +123,11 @@ function hasDataChanged(oldData, newData) {
 
 async function silentRefresh() {
   try {
-    const url = getProxiedUrl("getAll");
-    const res = await fetch(url);
+    const res = await fetch(`${API_URL}?action=getAll`);
     if (!res.ok) return;
     const data = await res.json();
-    // Adapter selon la structure de réponse : { status: "success", data: { caisse, cct1 } }
-    const payload = data.data || data;
-    const newCaisse = (payload.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
-    const newCct1 = (payload.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
+    const newCaisse = (data.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
+    const newCct1 = (data.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
 
     const caisseChanged = hasDataChanged(caisseData, newCaisse);
     const cct1Changed = hasDataChanged(cct1Data, newCct1);
@@ -198,13 +175,11 @@ function restoreScroll(type) {
 async function loadAllData() {
   try {
     showMessage('Chargement...');
-    const url = getProxiedUrl("getAll");
-    const res = await fetch(url);
+    const res = await fetch(`${API_URL}?action=getAll`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    const payload = data.data || data;
-    caisseData = (payload.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
-    cct1Data = (payload.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
+    caisseData = (data.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
+    cct1Data = (data.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
 
     initFilters('caisse');
     initFilters('cct1');
@@ -404,6 +379,7 @@ function editRow(type, rowId) {
   headers.forEach((header, index) => {
     const fieldDiv = document.createElement('div');
     fieldDiv.className = 'edit-field';
+    // Champs longs sur toute la largeur
     if (header.includes('OBSERVATION') || header.includes('COMMENTAIRES') || header.includes('LIBELLE')) {
       fieldDiv.classList.add('full-width');
     }
@@ -430,8 +406,7 @@ function saveEdit() {
       const input = document.getElementById(`edit_${index}`);
       if (input) arr[idx][header] = input.value;
     });
-    const url = getProxiedUrl("update");
-    fetch(url, {
+    fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'update', sheet: type, row: arr[idx]._row, data: arr[idx] })
@@ -489,9 +464,6 @@ function setupConditionalCaisse() {
   const form = document.getElementById('formCaisse');
   if (!form) return;
 
-  // Définir l'URL d'action du formulaire (iframe)
-  form.action = API_BASE; // ou API_BASE + "?action=add" selon votre API
-
   const modeSelect = form.querySelector('select[name="MODE DE PAIEMENT"]');
   const bqVersement = form.querySelector('input[name="BQ VERSEMENT"]');
   const dateVersement = form.querySelector('input[name="DATE DE VERSEMENT"]');
@@ -539,17 +511,11 @@ function setupConditionalCaisse() {
   });
 }
 
-function setupConditionalCCT1() {
-  const form = document.getElementById('formCCT1');
-  if (form) form.action = API_BASE; // ou API_BASE + "?action=add"
-}
-
 // ================= INITIALISATION =================
 function init() {
   setupAuth();
   setupIframe();
   setupConditionalCaisse();
-  setupConditionalCCT1();
   document.querySelectorAll('form').forEach(f => f.addEventListener('submit', () => showMessage('Envoi...')));
   document.querySelectorAll('.nav-item').forEach(b => {
     b.addEventListener('click', () => showForm(b.dataset.page));
