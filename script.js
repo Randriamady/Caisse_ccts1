@@ -1,5 +1,5 @@
 // ================= CONFIGURATION =================
-const API_URL = "https://script.google.com/macros/s/AKfycbzhz9PrqsBjy-xIpCpplOq6FzUODTuSQzygwDAz1WYDy45vTov-pJz7Ee8mIIdlxu9GBg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzXKItrxpQzZaHeT3ZtiycHCD6ICg1NTi2BdbnXsidhcsCnvpXHg_rjbs-2cYyaISvoYQ/exec";
 const AUTO_REFRESH_INTERVAL = 2000; // 30 secondes
 
 // ================= ÉTAT GLOBAL =================
