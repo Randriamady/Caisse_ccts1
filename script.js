@@ -6,7 +6,7 @@ if (typeof CONFIG === 'undefined') {
 
 const API_BASE = CONFIG.API_URL;
 const ACCESS_CODE = CONFIG.ACCESS_CODE;
-const AUTO_REFRESH_INTERVAL = 30000; // 30 secondes
+const AUTO_REFRESH_INTERVAL = 80000; // 30 secondes
 
 // ================= PROXY CORS =================
 function getProxiedUrl(action) {
@@ -181,30 +181,16 @@ function restoreScroll(type) {
 
 // ================= CHARGEMENT COMPLET =================
 async function loadAllData() {
-  try {
-    showMessage('Chargement...');
-    const res = await fetch(getProxiedUrl("getAll"));
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    const payload = json.data || json;
-    caisseData = (payload.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
-    cct1Data = (payload.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
+  const url = "https://script.google.com/macros/s/AKfycbwKCnS8t9sUpOCRKy7qOVWosBm0c2jrMe9iIr_FYxQc_uu7mPlNv7x9kdccky2rleoPMw/exec?action=getAll";
 
-    initFilters('caisse');
-    initFilters('cct1');
-    setupSearch('caisse');
-    setupSearch('cct1');
+  const res = await fetch(url);
 
-    renderTable('caisse');
-    renderTable('cct1');
-    updateTotalCount('caisse');
-    updateTotalCount('cct1');
-    showMessage(`${caisseData.length} caisse, ${cct1Data.length} cct1`);
-    setTimeout(updateFixedPositions, 50);
-  } catch (e) {
-    showMessage('Erreur chargement', true);
-    console.error(e);
+  if (!res.ok) {
+    throw new Error("HTTP " + res.status);
   }
+
+  const data = await res.json();
+  console.log(data);
 }
 
 // ================= NAVIGATION =================
