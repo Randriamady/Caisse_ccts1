@@ -65,7 +65,8 @@
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
     <!-- Formulaire Caisse -->
-    <form id="formCaisse" method="POST" action="https://script.google.com/macros/s/AKfycbzXKItrxpQzZaHeT3ZtiycHCD6ICg1NTi2BdbnXsidhcsCnvpXHg_rjbs-2cYyaISvoYQ/exec" target="hidden_iframe" class="glass-form">
+    <!-- L'attribut action est défini dynamiquement par script.js -->
+    <form id="formCaisse" method="POST" target="hidden_iframe" class="glass-form">
       <div class="form-header"><i class="fas fa-coins"></i><h2>Formulaire Caisse</h2><span class="form-badge">Nouvelle transaction</span></div>
       <input type="hidden" name="sheet" value="caisse">
       <div class="form-two-columns">
@@ -95,7 +96,8 @@
     </form>
 
     <!-- Formulaire CCT1 -->
-    <form id="formCCT1" method="POST" action="https://script.google.com/macros/s/AKfycbzXKItrxpQzZaHeT3ZtiycHCD6ICg1NTi2BdbnXsidhcsCnvpXHg_rjbs-2cYyaISvoYQ/exec" target="hidden_iframe" style="display:none;" class="glass-form">
+    <!-- L'attribut action est défini dynamiquement par script.js -->
+    <form id="formCCT1" method="POST" target="hidden_iframe" style="display:none;" class="glass-form">
       <div class="form-header"><i class="fas fa-chart-line"></i><h2>Formulaire CCT1</h2><span class="form-badge">Suivi financier</span></div>
       <input type="hidden" name="sheet" value="cct1">
       <div class="form-two-columns">
@@ -165,6 +167,8 @@
   </div>
 </div>
 
+<!-- Chargement de la configuration (fichier ignoré par Git) -->
+<script src="config.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
