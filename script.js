@@ -1,5 +1,5 @@
 // ================= CONFIGURATION =================
-const API_URL = "https://script.google.com/macros/s/AKfycbwKCnS8t9sUpOCRKy7qOVWosBm0c2jrMe9iIr_FYxQc_uu7mPlNv7x9kdccky2rleoPMw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyqh6bXsgRAdfrYU6NKCecArFXdWu2fMFV_AFR5FowQRoLgQ87EiK7-_YK5vYwHdF77mA/exec";
 const AUTO_REFRESH_INTERVAL = 30000; // 30 secondes
 
 // ================= ÉTAT GLOBAL =================
@@ -406,10 +406,20 @@ function saveEdit() {
       const input = document.getElementById(`edit_${index}`);
       if (input) arr[idx][header] = input.value;
     });
+    
+    // Envoi en formulaire URL-encoded au lieu de JSON
+    const formData = new URLSearchParams();
+    formData.append('action', 'update');
+    formData.append('sheet', type);
+    formData.append('row', arr[idx]._row);
+    for (const [key, value] of Object.entries(arr[idx])) {
+      if (key !== '_row') formData.append(key, value);
+    }
+    
     fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'update', sheet: type, row: arr[idx]._row, data: arr[idx] })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData
     }).catch(e => console.warn(e));
   }
   closeModal();
