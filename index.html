@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Gestion Caisse & CCT1 | Système financier</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<header class="main-header">
+  <div class="logo-area"><i class="fas fa-calculator"></i><span>Gestion Caisse / CCT1</span><span class="badge">PRO</span></div>
+  <div class="header-actions">
+    <button id="loginBtn" class="btn-login"><i class="fas fa-lock"></i> Connexion</button>
+    <button id="logoutBtn" class="btn-logout" style="display:none;"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+  </div>
+</header>
+
+<div id="message" class="message-toast"></div>
+
+<div id="app" style="display:none;">
+  <div class="sidebar">
+    <div class="sidebar-header"><i class="fas fa-chart-line"></i><span>Menu Principal</span></div>
+    <nav class="sidebar-nav">
+      <!-- Menu Caisse -->
+      <div class="nav-group">
+        <div class="nav-parent" onclick="toggleSubmenu('submenuCaisse')">
+          <i class="fas fa-money-bill-wave"></i>
+          <span>Caisse</span>
+          <i class="fas fa-chevron-down submenu-arrow"></i>
+        </div>
+        <div id="submenuCaisse" class="submenu" style="display: none;">
+          <button class="nav-item sub-item" data-page="caisse">
+            <i class="fas fa-plus-circle"></i><span>Insertion</span>
+          </button>
+          <button class="nav-item sub-item" data-page="consultCaisse">
+            <i class="fas fa-chart-simple"></i><span>Consultation</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu CCT1 -->
+      <div class="nav-group">
+        <div class="nav-parent" onclick="toggleSubmenu('submenuCCT1')">
+          <i class="fas fa-file-invoice"></i>
+          <span>CCT1</span>
+          <i class="fas fa-chevron-down submenu-arrow"></i>
+        </div>
+        <div id="submenuCCT1" class="submenu" style="display: none;">
+          <button class="nav-item sub-item" data-page="cct1">
+            <i class="fas fa-plus-circle"></i><span>Insertion</span>
+          </button>
+          <button class="nav-item sub-item" data-page="consultCCT1">
+            <i class="fas fa-magnifying-glass-chart"></i><span>Consultation</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer"><div class="version">v5.0 - Sous-menus</div></div>
+  </div>
+
+  <div class="content">
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+    <!-- Formulaire Caisse -->
+    <form id="formCaisse" method="POST" target="hidden_iframe" class="glass-form">
+      <div class="form-header"><i class="fas fa-coins"></i><h2>Formulaire Caisse</h2><span class="form-badge">Nouvelle transaction</span></div>
+      <input type="hidden" name="sheet" value="caisse">
+      <div class="form-two-columns">
+        <div class="form-col">
+          <div class="form-group"><label><i class="far fa-calendar-alt"></i> Date *</label><input type="date" name="DATE" required></div>
+          <div class="form-group"><label><i class="fas fa-building"></i> Société</label><input type="text" name="SOCIETE" placeholder="Nom de la société"></div>
+          <div class="form-group"><label><i class="fas fa-diagram-project"></i> Département</label><input type="text" name="DEPARTEMENT" placeholder="Département"></div>
+          <div class="form-group"><label><i class="fas fa-user-tie"></i> DR/DA</label><input type="text" name="DR/DA" placeholder="DR ou DA"></div>
+          <div class="form-group"><label><i class="fas fa-tag"></i> RV SAGE/MANUEL</label><input type="text" name="RV SAGE/MANUEL" placeholder="Numéro RV"></div>
+          <div class="form-group"><label><i class="fas fa-credit-card"></i> Mode de paiement</label><select name="MODE DE PAIEMENT"><option value="">Sélectionner</option><option value="chèque">🏦 Chèque</option><option value="espece">💵 Espèce</option><option value="virement">💻 Virement</option></select></div>
+          <div class="form-group"><label><i class="far fa-clock"></i> Échéance Banque</label><input type="date" name="ECHEANCE BANQUE"></div>
+          <div class="form-group"><label><i class="fas fa-calendar-check"></i> Date versement</label><input type="date" name="DATE DE VERSEMENT"></div>
+          <div class="form-group"><label><i class="fas fa-university"></i> BQ Versement</label><input type="text" name="BQ VERSEMENT" placeholder="Banque"></div>
+        </div>
+        <div class="form-col">
+          <div class="form-group"><label><i class="fas fa-user"></i> Client</label><input type="text" name="CLIENT" placeholder="Nom client"></div>
+          <div class="form-group"><label><i class="fas fa-qrcode"></i> Code Client</label><input type="text" name="CODE CLIENT" placeholder="Code"></div>
+          <div class="form-group"><label><i class="fas fa-receipt"></i> Facture</label><input type="text" name="FACTURE" placeholder="N° facture"></div>
+          <div class="form-group"><label><i class="fas fa-align-left"></i> Libellé</label><input type="text" name="LIBELLE" placeholder="Description"></div>
+          <div class="form-group"><label><i class="fas fa-arrow-down"></i> Encaissement</label><input type="number" name="ENCAISSEMENT" step="0.01" placeholder="0.00"></div>
+          <div class="form-group"><label><i class="fas fa-arrow-up"></i> Décaissement</label><input type="number" name="DECAISSEMENT" step="0.01" placeholder="0.00"></div>
+          <div class="form-group"><label><i class="fas fa-coins"></i> Montant</label><input type="number" name="MONTANT" step="0.01" placeholder="0.00"></div>
+          <div class="form-group full-width"><label><i class="fas fa-pen"></i> Observation</label><textarea name="OBSERVATION" rows="3"></textarea></div>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Envoyer la transaction</button>
+    </form>
+
+    <!-- Formulaire CCT1 -->
+    <form id="formCCT1" method="POST" target="hidden_iframe" style="display:none;" class="glass-form">
+      <div class="form-header"><i class="fas fa-chart-line"></i><h2>Formulaire CCT1</h2><span class="form-badge">Suivi financier</span></div>
+      <input type="hidden" name="sheet" value="cct1">
+      <div class="form-two-columns">
+        <div class="form-col">
+          <div class="form-group"><label><i class="far fa-calendar-alt"></i> Date *</label><input type="date" name="DATE" required></div>
+          <div class="form-group"><label><i class="fas fa-hashtag"></i> N°RV</label><input type="text" name="N°RV" placeholder="Numéro RV"></div>
+          <div class="form-group"><label><i class="fas fa-user-tie"></i> DR-DA</label><input type="text" name="DR-DA" placeholder="DR ou DA"></div>
+          <div class="form-group"><label><i class="fas fa-align-left"></i> Libellé</label><input type="text" name="LIBELLE" placeholder="Description"></div>
+          <div class="form-group"><label><i class="fas fa-arrow-down"></i> Recette</label><input type="number" name="RECETTE" step="0.01" placeholder="0.00"></div>
+        </div>
+        <div class="form-col">
+          <div class="form-group"><label><i class="fas fa-arrow-up"></i> Dépense</label><input type="number" name="DEPENSE" step="0.01" placeholder="0.00"></div>
+          <div class="form-group"><label><i class="fas fa-balance-scale"></i> Solde</label><input type="number" name="SOLDE" step="0.01" placeholder="0.00"></div>
+          <div class="form-group"><label><i class="fas fa-building"></i> Sociétés</label><input type="text" name="SOCIETES" placeholder="Sociétés concernées"></div>
+          <div class="form-group full-width"><label><i class="fas fa-comment"></i> Commentaires</label><textarea name="COMMENTAIRES" rows="3"></textarea></div>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Envoyer les données</button>
+    </form>
+
+    <!-- Consultation Caisse -->
+    <div id="consultCaisse" style="display:none;" class="consult-section">
+      <div class="section-header">
+        <h2><i class="fas fa-chart-simple"></i> Consultation Caisse</h2>
+        <div class="stats-card"><span>Total transactions</span><strong id="totalCountCaisse">0</strong></div>
+      </div>
+      <div class="filter-bar">
+        <div class="filter-group"><i class="fas fa-search"></i><input id="searchCaisse" placeholder="Rechercher..."></div>
+        <div class="filter-group"><i class="fas fa-building"></i><select id="filterSocieteCaisse"></select></div>
+        <button onclick="applyFilter('caisse')" class="btn-filter"><i class="fas fa-filter"></i> Filtrer</button>
+        <button onclick="exportExcel('caisse')" class="btn-export"><i class="fas fa-file-excel"></i> Export Excel</button>
+        <button onclick="resetFilters('caisse')" class="btn-reset"><i class="fas fa-undo-alt"></i> Réinitialiser</button>
+      </div>
+      <div class="double-table-wrapper">
+        <div id="tableCaisse" class="table-body"></div>
+      </div>
+    </div>
+
+    <!-- Consultation CCT1 -->
+    <div id="consultCCT1" style="display:none;" class="consult-section">
+      <div class="section-header">
+        <h2><i class="fas fa-magnifying-glass-chart"></i> Consultation CCT1</h2>
+        <div class="stats-card"><span>Total enregistrements</span><strong id="totalCountCCT1">0</strong></div>
+      </div>
+      <div class="filter-bar">
+        <div class="filter-group"><i class="fas fa-search"></i><input id="searchCCT1" placeholder="Rechercher..."></div>
+        <div class="filter-group"><i class="fas fa-building"></i><select id="filterSocieteCCT1"></select></div>
+        <button onclick="applyFilter('cct1')" class="btn-filter"><i class="fas fa-filter"></i> Filtrer</button>
+        <button onclick="exportExcel('cct1')" class="btn-export"><i class="fas fa-file-excel"></i> Export Excel</button>
+        <button onclick="resetFilters('cct1')" class="btn-reset"><i class="fas fa-undo-alt"></i> Réinitialiser</button>
+      </div>
+      <div class="double-table-wrapper">
+        <div id="tableCCT1" class="table-body"></div>
+      </div>
+    </div>
+
+    <!-- Modal Édition -->
+    <div id="modalEdit" class="modal">
+      <div class="modal-content">
+        <div class="modal-header"><h3><i class="fas fa-edit"></i> Modifier</h3><span class="close-modal" onclick="closeModal()">&times;</span></div>
+        <div class="modal-body">
+          <!-- Les champs seront injectés dynamiquement -->
+        </div>
+        <div class="modal-footer"><button onclick="saveEdit()" class="btn-save"><i class="fas fa-save"></i> Enregistrer</button><button onclick="closeModal()" class="btn-cancel"><i class="fas fa-times"></i> Annuler</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chargement de la configuration (fichier ignoré par Git) -->
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
