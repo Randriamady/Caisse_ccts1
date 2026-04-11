@@ -1,6 +1,6 @@
 // ================= CONFIGURATION =================
-const API_URL = CONFIG.API_URL;
-const AUTO_REFRESH_INTERVAL = 30000; // 30 secondes
+const API_URL = "https://script.google.com/macros/s/AKfycbzhz9PrqsBjy-xIpCpplOq6FzUODTuSQzygwDAz1WYDy45vTov-pJz7Ee8mIIdlxu9GBg/exec";
+const AUTO_REFRESH_INTERVAL = 2000; // 30 secondes
 
 // ================= ÉTAT GLOBAL =================
 let caisseData = [];
@@ -65,7 +65,7 @@ function setupIframe() {
 // ================= AUTHENTIFICATION =================
 function setupAuth() {
   document.getElementById('loginBtn').onclick = () => {
-    if (prompt('Code d\'accès :') === CONFIG.ACCESS_CODE) {
+    if (prompt('Code d\'accès :') === '1234') {
       document.getElementById('app').style.display = 'flex';
       document.getElementById('loginBtn').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'inline-flex';
@@ -379,6 +379,7 @@ function editRow(type, rowId) {
   headers.forEach((header, index) => {
     const fieldDiv = document.createElement('div');
     fieldDiv.className = 'edit-field';
+    // Champs longs sur toute la largeur
     if (header.includes('OBSERVATION') || header.includes('COMMENTAIRES') || header.includes('LIBELLE')) {
       fieldDiv.classList.add('full-width');
     }
@@ -463,9 +464,6 @@ function setupConditionalCaisse() {
   const form = document.getElementById('formCaisse');
   if (!form) return;
 
-  // Définir l'URL d'action du formulaire
-  form.action = API_URL;
-
   const modeSelect = form.querySelector('select[name="MODE DE PAIEMENT"]');
   const bqVersement = form.querySelector('input[name="BQ VERSEMENT"]');
   const dateVersement = form.querySelector('input[name="DATE DE VERSEMENT"]');
@@ -513,18 +511,11 @@ function setupConditionalCaisse() {
   });
 }
 
-// Définir aussi l'URL pour le formulaire CCT1
-function setupConditionalCCT1() {
-  const form = document.getElementById('formCCT1');
-  if (form) form.action = API_URL;
-}
-
 // ================= INITIALISATION =================
 function init() {
   setupAuth();
   setupIframe();
   setupConditionalCaisse();
-  setupConditionalCCT1();
   document.querySelectorAll('form').forEach(f => f.addEventListener('submit', () => showMessage('Envoi...')));
   document.querySelectorAll('.nav-item').forEach(b => {
     b.addEventListener('click', () => showForm(b.dataset.page));
