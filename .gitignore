@@ -1,5 +1,13 @@
+# Fichier de configuration sensible
 config.js
+
+# Système
 .DS_Store
 Thumbs.db
+
+# Éditeurs
 .vscode/
 .idea/
+
+# Dépendances Node.js
+node_modules/
