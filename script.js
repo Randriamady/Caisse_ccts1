@@ -1,18 +1,6 @@
 // ================= CONFIGURATION =================
-if (typeof CONFIG === 'undefined') {
-  alert('Erreur : fichier de configuration manquant. Créez config.js à partir de config.example.js');
-  throw new Error('CONFIG is not defined');
-}
-
-const API_BASE = CONFIG.API_URL;
-const ACCESS_CODE = CONFIG.ACCESS_CODE;
-const AUTO_REFRESH_INTERVAL = 80000; // 30 secondes
-
-// ================= PROXY CORS =================
-function getProxiedUrl(action) {
-  const target = API_BASE + "?action=" + action;
-  return "https://corsproxy.io/?" + encodeURIComponent(target);
-}
+const API_URL = "https://script.google.com/macros/s/AKfycbwKCnS8t9sUpOCRKy7qOVWosBm0c2jrMe9iIr_FYxQc_uu7mPlNv7x9kdccky2rleoPMw/exec";
+const AUTO_REFRESH_INTERVAL = 30000; // 30 secondes
 
 // ================= ÉTAT GLOBAL =================
 let caisseData = [];
@@ -45,7 +33,8 @@ function showMessage(text, isError = false) {
 function toggleSubmenu(id) {
   const submenu = document.getElementById(id);
   const arrow = submenu.previousElementSibling.querySelector('.submenu-arrow');
-  document.querySelectorAll('.submenu').forEach(sm => {
+  const allSubmenus = document.querySelectorAll('.submenu');
+  allSubmenus.forEach(sm => {
     if (sm.id !== id) {
       sm.style.display = 'none';
       const arr = sm.previousElementSibling.querySelector('.submenu-arrow');
@@ -76,12 +65,13 @@ function setupIframe() {
 // ================= AUTHENTIFICATION =================
 function setupAuth() {
   document.getElementById('loginBtn').onclick = () => {
-    if (prompt('Code d\'accès :') === ACCESS_CODE) {
+    if (prompt('Code d\'accès :') === '1234') {
       document.getElementById('app').style.display = 'flex';
       document.getElementById('loginBtn').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'inline-flex';
       loadAllData();
       startAutoRefresh();
+      // Ouvrir sous-menu Caisse et afficher Insertion
       setTimeout(() => {
         const submenu = document.getElementById('submenuCaisse');
         if (submenu) {
@@ -133,14 +123,16 @@ function hasDataChanged(oldData, newData) {
 
 async function silentRefresh() {
   try {
-    const res = await fetch(getProxiedUrl("getAll"));
+    const res = await fetch(`${API_URL}?action=getAll`);
     if (!res.ok) return;
-    const json = await res.json();
-    const payload = json.data || json;
-    const newCaisse = (payload.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
-    const newCct1 = (payload.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
+    const data = await res.json();
+    const newCaisse = (data.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
+    const newCct1 = (data.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
 
-    if (hasDataChanged(caisseData, newCaisse)) {
+    const caisseChanged = hasDataChanged(caisseData, newCaisse);
+    const cct1Changed = hasDataChanged(cct1Data, newCct1);
+
+    if (caisseChanged) {
       caisseData = newCaisse;
       initFilters('caisse');
       if (document.getElementById('consultCaisse').style.display === 'block') {
@@ -149,7 +141,7 @@ async function silentRefresh() {
         setTimeout(() => restoreScroll('caisse'), 30);
       }
     }
-    if (hasDataChanged(cct1Data, newCct1)) {
+    if (cct1Changed) {
       cct1Data = newCct1;
       initFilters('cct1');
       if (document.getElementById('consultCCT1').style.display === 'block') {
@@ -181,16 +173,29 @@ function restoreScroll(type) {
 
 // ================= CHARGEMENT COMPLET =================
 async function loadAllData() {
-  const url = "https://script.google.com/macros/s/AKfycbwKCnS8t9sUpOCRKy7qOVWosBm0c2jrMe9iIr_FYxQc_uu7mPlNv7x9kdccky2rleoPMw/exec?action=getAll";
+  try {
+    showMessage('Chargement...');
+    const res = await fetch(`${API_URL}?action=getAll`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    caisseData = (data.caisse || []).map((r, i) => ({ ...r, _row: i + 1 }));
+    cct1Data = (data.cct1 || []).map((r, i) => ({ ...r, _row: i + 1 }));
 
-  const res = await fetch(url);
+    initFilters('caisse');
+    initFilters('cct1');
+    setupSearch('caisse');
+    setupSearch('cct1');
 
-  if (!res.ok) {
-    throw new Error("HTTP " + res.status);
+    renderTable('caisse');
+    renderTable('cct1');
+    updateTotalCount('caisse');
+    updateTotalCount('cct1');
+    showMessage(`${caisseData.length} caisse, ${cct1Data.length} cct1`);
+    setTimeout(updateFixedPositions, 50);
+  } catch (e) {
+    showMessage('Erreur chargement', true);
+    console.error(e);
   }
-
-  const data = await res.json();
-  console.log(data);
 }
 
 // ================= NAVIGATION =================
@@ -374,6 +379,7 @@ function editRow(type, rowId) {
   headers.forEach((header, index) => {
     const fieldDiv = document.createElement('div');
     fieldDiv.className = 'edit-field';
+    // Champs longs sur toute la largeur
     if (header.includes('OBSERVATION') || header.includes('COMMENTAIRES') || header.includes('LIBELLE')) {
       fieldDiv.classList.add('full-width');
     }
@@ -400,7 +406,7 @@ function saveEdit() {
       const input = document.getElementById(`edit_${index}`);
       if (input) arr[idx][header] = input.value;
     });
-    fetch(getProxiedUrl("update"), {
+    fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'update', sheet: type, row: arr[idx]._row, data: arr[idx] })
@@ -457,7 +463,6 @@ function updateFixedPositions() {
 function setupConditionalCaisse() {
   const form = document.getElementById('formCaisse');
   if (!form) return;
-  form.action = API_BASE;
 
   const modeSelect = form.querySelector('select[name="MODE DE PAIEMENT"]');
   const bqVersement = form.querySelector('input[name="BQ VERSEMENT"]');
@@ -468,9 +473,9 @@ function setupConditionalCaisse() {
 
   function updateConditionalFields() {
     const mode = modeSelect.value;
-    [bqVersement, dateVersement, echeanceBanque].forEach(f => {
-      f.disabled = false;
-      f.style.backgroundColor = '';
+    [bqVersement, dateVersement, echeanceBanque].forEach(field => {
+      field.disabled = false;
+      field.style.backgroundColor = '';
     });
 
     if (mode === 'chèque') {
@@ -478,10 +483,10 @@ function setupConditionalCaisse() {
       bqVersement.style.backgroundColor = '#d1fae5';
       bqVersement.value = '';
     } else if (mode === 'espece') {
-      [dateVersement, echeanceBanque, bqVersement].forEach(f => {
-        f.disabled = true;
-        f.style.backgroundColor = '#d1fae5';
-        f.value = '';
+      [dateVersement, echeanceBanque, bqVersement].forEach(field => {
+        field.disabled = true;
+        field.style.backgroundColor = '#d1fae5';
+        field.value = '';
       });
     }
   }
@@ -491,14 +496,14 @@ function setupConditionalCaisse() {
 
   form.addEventListener('submit', (e) => {
     const mode = modeSelect.value;
-    const fields = [];
-    if (mode === 'chèque') fields.push(bqVersement);
-    else if (mode === 'espece') fields.push(dateVersement, echeanceBanque, bqVersement);
+    const fieldsToMaybeEnable = [];
+    if (mode === 'chèque') fieldsToMaybeEnable.push(bqVersement);
+    else if (mode === 'espece') fieldsToMaybeEnable.push(dateVersement, echeanceBanque, bqVersement);
 
-    const disabledStates = fields.map(f => f.disabled);
-    fields.forEach(f => f.disabled = false);
+    const disabledStates = fieldsToMaybeEnable.map(f => f.disabled);
+    fieldsToMaybeEnable.forEach(f => f.disabled = false);
     setTimeout(() => {
-      fields.forEach((f, i) => {
+      fieldsToMaybeEnable.forEach((f, i) => {
         f.disabled = disabledStates[i];
         if (f.disabled) f.style.backgroundColor = '#d1fae5';
       });
@@ -506,19 +511,15 @@ function setupConditionalCaisse() {
   });
 }
 
-function setupConditionalCCT1() {
-  const form = document.getElementById('formCCT1');
-  if (form) form.action = API_BASE;
-}
-
 // ================= INITIALISATION =================
 function init() {
   setupAuth();
   setupIframe();
   setupConditionalCaisse();
-  setupConditionalCCT1();
   document.querySelectorAll('form').forEach(f => f.addEventListener('submit', () => showMessage('Envoi...')));
-  document.querySelectorAll('.nav-item').forEach(b => b.addEventListener('click', () => showForm(b.dataset.page)));
+  document.querySelectorAll('.nav-item').forEach(b => {
+    b.addEventListener('click', () => showForm(b.dataset.page));
+  });
   window.addEventListener('resize', () => requestAnimationFrame(updateFixedPositions));
   window.addEventListener('beforeunload', stopAutoRefresh);
 }

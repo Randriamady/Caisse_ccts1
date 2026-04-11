@@ -32,8 +32,12 @@
           <i class="fas fa-chevron-down submenu-arrow"></i>
         </div>
         <div id="submenuCaisse" class="submenu" style="display: none;">
-          <button class="nav-item sub-item" data-page="caisse"><i class="fas fa-plus-circle"></i><span>Insertion</span></button>
-          <button class="nav-item sub-item" data-page="consultCaisse"><i class="fas fa-chart-simple"></i><span>Consultation</span></button>
+          <button class="nav-item sub-item" data-page="caisse">
+            <i class="fas fa-plus-circle"></i><span>Insertion</span>
+          </button>
+          <button class="nav-item sub-item" data-page="consultCaisse">
+            <i class="fas fa-chart-simple"></i><span>Consultation</span>
+          </button>
         </div>
       </div>
 
@@ -45,8 +49,12 @@
           <i class="fas fa-chevron-down submenu-arrow"></i>
         </div>
         <div id="submenuCCT1" class="submenu" style="display: none;">
-          <button class="nav-item sub-item" data-page="cct1"><i class="fas fa-plus-circle"></i><span>Insertion</span></button>
-          <button class="nav-item sub-item" data-page="consultCCT1"><i class="fas fa-magnifying-glass-chart"></i><span>Consultation</span></button>
+          <button class="nav-item sub-item" data-page="cct1">
+            <i class="fas fa-plus-circle"></i><span>Insertion</span>
+          </button>
+          <button class="nav-item sub-item" data-page="consultCCT1">
+            <i class="fas fa-magnifying-glass-chart"></i><span>Consultation</span>
+          </button>
         </div>
       </div>
     </nav>
@@ -56,9 +64,8 @@
   <div class="content">
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-    <!-- Formulaire Caisse (action définie dynamiquement) -->
-    <form id="formCaisse" method="POST" target="hidden_iframe" class="glass-form">
-      <!-- contenu inchangé (champs) -->
+    <!-- Formulaire Caisse -->
+    <form id="formCaisse" method="POST" action="https://script.google.com/macros/s/AKfycbwKCnS8t9sUpOCRKy7qOVWosBm0c2jrMe9iIr_FYxQc_uu7mPlNv7x9kdccky2rleoPMw/exec" target="hidden_iframe" class="glass-form">
       <div class="form-header"><i class="fas fa-coins"></i><h2>Formulaire Caisse</h2><span class="form-badge">Nouvelle transaction</span></div>
       <input type="hidden" name="sheet" value="caisse">
       <div class="form-two-columns">
@@ -87,8 +94,8 @@
       <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Envoyer la transaction</button>
     </form>
 
-    <!-- Formulaire CCT1 (action définie dynamiquement) -->
-    <form id="formCCT1" method="POST" target="hidden_iframe" style="display:none;" class="glass-form">
+    <!-- Formulaire CCT1 -->
+    <form id="formCCT1" method="POST" action="https://script.google.com/macros/s/AKfycbwKCnS8t9sUpOCRKy7qOVWosBm0c2jrMe9iIr_FYxQc_uu7mPlNv7x9kdccky2rleoPMw/exec" target="hidden_iframe" style="display:none;" class="glass-form">
       <div class="form-header"><i class="fas fa-chart-line"></i><h2>Formulaire CCT1</h2><span class="form-badge">Suivi financier</span></div>
       <input type="hidden" name="sheet" value="cct1">
       <div class="form-two-columns">
@@ -111,7 +118,10 @@
 
     <!-- Consultation Caisse -->
     <div id="consultCaisse" style="display:none;" class="consult-section">
-      <div class="section-header"><h2><i class="fas fa-chart-simple"></i> Consultation Caisse</h2><div class="stats-card"><span>Total transactions</span><strong id="totalCountCaisse">0</strong></div></div>
+      <div class="section-header">
+        <h2><i class="fas fa-chart-simple"></i> Consultation Caisse</h2>
+        <div class="stats-card"><span>Total transactions</span><strong id="totalCountCaisse">0</strong></div>
+      </div>
       <div class="filter-bar">
         <div class="filter-group"><i class="fas fa-search"></i><input id="searchCaisse" placeholder="Rechercher..."></div>
         <div class="filter-group"><i class="fas fa-building"></i><select id="filterSocieteCaisse"></select></div>
@@ -119,12 +129,17 @@
         <button onclick="exportExcel('caisse')" class="btn-export"><i class="fas fa-file-excel"></i> Export Excel</button>
         <button onclick="resetFilters('caisse')" class="btn-reset"><i class="fas fa-undo-alt"></i> Réinitialiser</button>
       </div>
-      <div class="double-table-wrapper"><div id="tableCaisse" class="table-body"></div></div>
+      <div class="double-table-wrapper">
+        <div id="tableCaisse" class="table-body"></div>
+      </div>
     </div>
 
     <!-- Consultation CCT1 -->
     <div id="consultCCT1" style="display:none;" class="consult-section">
-      <div class="section-header"><h2><i class="fas fa-magnifying-glass-chart"></i> Consultation CCT1</h2><div class="stats-card"><span>Total enregistrements</span><strong id="totalCountCCT1">0</strong></div></div>
+      <div class="section-header">
+        <h2><i class="fas fa-magnifying-glass-chart"></i> Consultation CCT1</h2>
+        <div class="stats-card"><span>Total enregistrements</span><strong id="totalCountCCT1">0</strong></div>
+      </div>
       <div class="filter-bar">
         <div class="filter-group"><i class="fas fa-search"></i><input id="searchCCT1" placeholder="Rechercher..."></div>
         <div class="filter-group"><i class="fas fa-building"></i><select id="filterSocieteCCT1"></select></div>
@@ -132,21 +147,24 @@
         <button onclick="exportExcel('cct1')" class="btn-export"><i class="fas fa-file-excel"></i> Export Excel</button>
         <button onclick="resetFilters('cct1')" class="btn-reset"><i class="fas fa-undo-alt"></i> Réinitialiser</button>
       </div>
-      <div class="double-table-wrapper"><div id="tableCCT1" class="table-body"></div></div>
+      <div class="double-table-wrapper">
+        <div id="tableCCT1" class="table-body"></div>
+      </div>
     </div>
 
     <!-- Modal Édition -->
     <div id="modalEdit" class="modal">
       <div class="modal-content">
         <div class="modal-header"><h3><i class="fas fa-edit"></i> Modifier</h3><span class="close-modal" onclick="closeModal()">&times;</span></div>
-        <div class="modal-body"></div>
+        <div class="modal-body">
+          <!-- Les champs seront injectés dynamiquement -->
+        </div>
         <div class="modal-footer"><button onclick="saveEdit()" class="btn-save"><i class="fas fa-save"></i> Enregistrer</button><button onclick="closeModal()" class="btn-cancel"><i class="fas fa-times"></i> Annuler</button></div>
       </div>
     </div>
   </div>
 </div>
 
-<script src="config.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
