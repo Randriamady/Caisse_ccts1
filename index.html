@@ -1,133 +1,344 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Gestion Caisse & CCT1 | Système financier</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Gestion Caisse & CCT1 | Système financier PRO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #ffffff; color: #1e293b; }
+    :root {
+      --primary: #4f46e5; --primary-dark: #4338ca; --primary-light: #818cf8;
+      --secondary: #10b981; --secondary-dark: #059669; --danger: #ef4444;
+      --warning: #f59e0b; --dark: #0f172a; --gray: #64748b; --light: #f1f5f9;
+      --white: #ffffff; --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1); --radius: 16px; --radius-sm: 10px;
+      --table-header-bg: rgba(59, 130, 246, 0.15);
+      --total-bg: rgba(59, 130, 246, 0.1);
+    }
+    /* ========== ÉCRAN DE CONNEXION ========== */
+    #loginScreen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(145deg, #f8fafc 0%, #eef2ff 100%);
+      display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 24px;
+    }
+    .login-card {
+      max-width: 480px; width: 100%; background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px); border-radius: 36px; padding: 48px 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .login-image { width: 160px; height: 160px; margin: 0 auto 24px; overflow: hidden; background: white; }
+    .login-image img { width: 100%; height: 100%; object-fit: contain; }
+    .login-card h1 { font-size: 32px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+    .login-subtitle { color: var(--gray); font-size: 16px; margin-bottom: 8px; }
+    .welcome-message { color: var(--primary-dark); font-size: 18px; font-weight: 600; margin-bottom: 24px; }
+    .password-field { margin-bottom: 24px; text-align: left; }
+    .password-input-wrapper { position: relative; }
+    .password-input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 18px; }
+    .password-input-wrapper input {
+      width: 100%; padding: 14px 16px 14px 48px; border: 1.5px solid #e2e8f0;
+      border-radius: 60px; font-size: 16px; font-family: 'Inter', sans-serif; transition: 0.2s;
+    }
+    .password-input-wrapper input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+    .btn-login-large {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white;
+      border: none; padding: 16px 32px; border-radius: 60px; font-weight: 700; font-size: 18px;
+      cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center;
+      gap: 12px; box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3); width: 100%;
+    }
+    .btn-login-large:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4); }
+    .btn-login-large:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+    .error-message { color: var(--danger); font-size: 13px; margin-top: 8px; display: none; }
+    /* ========== HEADER ========== */
+    .main-header {
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); padding: 0 28px; height: 72px;
+      display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-lg);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1100; border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-area i { background: none; -webkit-background-clip: unset; color: var(--primary); font-size: 28px; }
+    .badge { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-size: 11px; padding: 4px 10px; border-radius: 30px; font-weight: 600; }
+    .btn-logout { padding: 10px 22px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.25s; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; background: var(--danger); color: white; }
+    .btn-logout:hover { background: #dc2626; transform: translateY(-2px); }
+    /* ========== TOAST ========== */
+    .toast-message { position: fixed; bottom: 24px; right: 24px; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); color: white; padding: 12px 20px; border-radius: 40px; font-weight: 500; z-index: 1200; display: none; align-items: center; gap: 12px; box-shadow: var(--shadow-lg); font-size: 14px; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    /* ========== APP ========== */
+    #app { display: none; min-height: calc(100vh - 72px); margin-top: 72px; }
+    /* ========== SIDEBAR ========== */
+    .sidebar { position: fixed; left: 0; top: 72px; width: 280px; height: calc(100vh - 72px); background: var(--white); box-shadow: var(--shadow); display: flex; flex-direction: column; z-index: 100; }
+    .sidebar-header { padding: 24px 24px 16px; font-weight: 700; font-size: 18px; color: var(--dark); display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e2e8f0; }
+    .sidebar-nav { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .nav-group { margin-bottom: 4px; }
+    .nav-parent { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 600; color: var(--gray); cursor: pointer; transition: 0.2s; }
+    .nav-parent i:first-child { width: 24px; font-size: 18px; }
+    .submenu-arrow { margin-left: auto; font-size: 12px; transition: transform 0.3s; }
+    .nav-parent:hover { background: var(--light); color: var(--primary); }
+    .submenu { padding-left: 28px; margin-top: 6px; display: none; flex-direction: column; gap: 6px; }
+    .nav-item { background: none; border: none; padding: 10px 16px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; color: var(--gray); cursor: pointer; transition: 0.2s; width: 100%; text-align: left; }
+    .nav-item i { width: 24px; font-size: 16px; }
+    .nav-item:hover { background: var(--light); color: var(--primary); transform: translateX(4px); }
+    .nav-item.active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: var(--shadow-md); }
+    /* ========== CONTENT ========== */
+    .content { margin-left: 280px; padding: 0; min-height: calc(100vh - 72px); width: calc(100% - 280px); position: relative; }
+    /* ========== FORMULAIRES ========== */
+    .glass-form { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; margin: 24px; }
+    .form-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 18px 28px; color: white; display: flex; align-items: center; gap: 14px; }
+    .form-header i { font-size: 26px; }
+    .form-header h2 { flex: 1; font-size: 20px; font-weight: 700; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; padding: 28px; }
+    .form-block { display: flex; flex-direction: column; gap: 16px; }
+    .form-group { display: flex; align-items: center; gap: 12px; }
+    .form-group label { width: 150px; font-weight: 600; font-size: 13px; color: var(--gray); display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .form-group label i { color: var(--primary); width: 18px; }
+    .form-group input, .form-group select, .form-group textarea { flex: 1; padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 14px; font-family: 'Inter', sans-serif; transition: 0.2s; }
+    .form-group textarea { resize: vertical; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+    .submit-btn {
+      margin: 0 28px 28px auto; padding: 12px 28px; background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+      color: white; border: none; border-radius: 40px; font-weight: 700; cursor: pointer; transition: 0.2s;
+      display: inline-flex; align-items: center; gap: 10px; font-size: 14px;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+    .form-block .submit-btn-wrapper { display: flex; justify-content: flex-end; margin-top: 16px; }
+    /* ========== CONSULTATION ========== */
+    .consult-section { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: visible; margin: 0; position: relative; }
+    .section-header {
+      position: fixed; top: 72px; left: 280px; right: 0;
+      background: var(--table-header-bg);
+      backdrop-filter: blur(8px);
+      padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;
+      color: #1e293b; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .section-header h2 { font-size: 16px; font-weight: 700; }
+    .stats-card {
+      background: var(--total-bg); padding: 4px 12px; border-radius: 40px;
+      display: flex; align-items: center; gap: 8px; font-weight: 600;
+    }
+    .stats-card span { font-size: 11px; }
+    .stats-card strong { font-size: 18px; }
+    .filter-bar {
+      position: fixed; left: 280px; right: 0; top: calc(72px + 48px);
+      background: var(--light); padding: 8px 20px; display: flex; gap: 12px; flex-wrap: wrap;
+      align-items: center; justify-content: flex-end; border-bottom: 1px solid #e2e8f0; z-index: 999;
+    }
+    .filter-group { flex: 0 1 auto; min-width: 180px; position: relative; }
+    .filter-group i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 12px; }
+    .filter-group input, .filter-group select { width: 100%; padding: 6px 10px 6px 32px; border: 1px solid #cbd5e1; border-radius: 30px; font-size: 12px; background: white; font-family: 'Inter', sans-serif; transition: 0.2s; }
+    .filter-group input:focus, .filter-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2); }
+    .btn-filter, .btn-export, .btn-reset { padding: 6px 16px; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-family: 'Inter', sans-serif; }
+    .btn-filter { background: var(--primary); color: white; } .btn-filter:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-export { background: var(--secondary); color: white; } .btn-export:hover { background: var(--secondary-dark); transform: translateY(-1px); }
+    .btn-reset { background: var(--gray); color: white; } .btn-reset:hover { background: #5a6268; transform: translateY(-1px); }
+    /* ========== TABLEAUX ========== */
+    .double-table-wrapper {
+      position: relative;
+      /* On va ajouter un padding-top dynamique via JS pour éviter le chevauchement */
+    }
+    /* L'en-tête fixe du tableau devient sticky pour rester dans le flux */
+    .table-fixed-header {
+      position: sticky;
+      top: 0;
+      background: var(--table-header-bg);
+      backdrop-filter: blur(8px);
+      z-index: 998;
+      overflow-x: auto;
+      border-radius: 10px 10px 0 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .table-fixed-header table { width: max-content; min-width: 100%; border-collapse: collapse; }
+    .table-fixed-header th {
+      background: transparent; color: #1e293b; padding: 8px 12px; font-size: 11px; font-weight: 700;
+      white-space: nowrap; border-right: 1px solid rgba(0,0,0,0.05); cursor: pointer;
+    }
+    .table-fixed-header th:first-child { position: sticky; left: 0; background: var(--table-header-bg); z-index: 25; min-width: 80px; width: 80px; text-align: center; }
+    .table-fixed-header .filter-input {
+      width: 100%; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px;
+      background: white; color: #1e293b; font-size: 10px; margin-top: 4px; box-sizing: border-box;
+    }
+    .table-fixed-header .filter-input::placeholder { color: #64748b; font-size: 9px; }
+    .table-fixed-header .filter-input:focus { outline: none; border-color: var(--primary); }
+    .table-body {
+      overflow-x: auto;
+      border-radius: 0 0 10px 10px;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+      background: white;
+    }
+    .table-body table { width: max-content; min-width: 100%; border-collapse: collapse; }
+    .table-body td {
+      padding: 6px 10px; font-size: 11px; border-bottom: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0; white-space: nowrap;
+    }
+    .table-body td:first-child {
+      position: sticky; left: 0; background: white; z-index: 10;
+      box-shadow: 2px 0 5px -2px rgba(0,0,0,0.05); text-align: center; min-width: 80px;
+    }
+    .table-body tr:hover { background: #f8fafc; }
+    .edit-btn { background: var(--warning); border: none; padding: 4px 10px; border-radius: 30px; cursor: pointer; color: white; font-size: 10px; transition: 0.2s; }
+    .edit-btn:hover { background: #d97706; transform: scale(1.03); }
+    .table-body td:first-child .edit-btn { opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+    .table-body tr:hover td:first-child .edit-btn { opacity: 1; pointer-events: auto; }
+    /* ========== MODAL ========== */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 2000; justify-content: center; align-items: center; }
+    .modal-content { background: white; width: 850px; max-width: 90%; max-height: 85vh; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; }
+    .modal-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .close-modal { font-size: 28px; cursor: pointer; transition: transform 0.2s; } .close-modal:hover { transform: scale(1.2); }
+    .modal-body { padding: 24px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+    .edit-field { display: flex; align-items: center; gap: 12px; }
+    .edit-field label { width: 130px; font-weight: 600; font-size: 12px; color: var(--gray); flex-shrink: 0; }
+    .edit-field input { flex: 1; padding: 8px 10px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 13px; }
+    .edit-field.full-width { grid-column: span 2; margin-top: 8px; }
+    .modal-footer { padding: 16px 24px; display: flex; gap: 16px; border-top: 1px solid #e2e8f0; }
+    .btn-save, .btn-cancel { flex: 1; padding: 10px; border-radius: 40px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
+    .btn-save { background: var(--secondary); color: white; } .btn-cancel { background: var(--gray); color: white; }
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .sidebar { width: 100%; height: auto; position: relative; top: 0; flex-direction: row; overflow-x: auto; }
+      .sidebar-header { display: none; } .sidebar-nav { flex-direction: row; padding: 12px; gap: 8px; }
+      .nav-item span { display: none; } .content { margin-left: 0; width: 100%; }
+      .section-header, .filter-bar, .table-fixed-header { left: 0; right: 0; }
+      .filter-bar { justify-content: flex-start; flex-wrap: wrap; }
+      .section-header { position: relative; top: 0; left: 0; }
+      .table-fixed-header { position: sticky; top: 0; }
+      .form-grid { grid-template-columns: 1fr; gap: 16px; }
+      .modal-body { grid-template-columns: 1fr; }
+      .edit-field { flex-direction: column; align-items: stretch; }
+      .edit-field label { width: auto; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: var(--light); } ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+  </style>
 </head>
 <body>
 
+<!-- ÉCRAN DE CONNEXION -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-image">
+      <img src="image/sipromad.jfif" alt="Logo Sipromad">
+    </div>
+    <h1>Gestion Caisse & CCT1</h1>
+    <div class="login-subtitle">Système financier professionnel</div>
+    <div class="welcome-message">Bienvenue</div>
+    <div class="password-field">
+      <div class="password-input-wrapper">
+        <i class="fas fa-key"></i>
+        <input type="password" id="passwordInput" placeholder="Entrez le code d'accès" value="">
+      </div>
+      <div class="error-message" id="loginError"></div>
+    </div>
+    <button id="loginBtn" class="btn-login-large">
+      <i class="fas fa-sign-in-alt"></i> <span id="loginBtnText">Connexion sécurisée</span>
+    </button>
+  </div>
+</div>
+
+<!-- HEADER -->
 <header class="main-header">
-  <div class="logo-area"><i class="fas fa-calculator"></i><span>Gestion Caisse / CCT1</span><span class="badge">PRO</span></div>
+  <div class="logo-area"><i class="fas fa-chart-pie"></i><span>Gestion Caisse / CCT1</span><span class="badge">PRO</span></div>
   <div class="header-actions">
-    <button id="loginBtn" class="btn-login"><i class="fas fa-lock"></i> Connexion</button>
     <button id="logoutBtn" class="btn-logout" style="display:none;"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
   </div>
 </header>
 
-<div id="message" class="message-toast"></div>
+<div id="toastMsg" class="toast-message"></div>
 
-<div id="app" style="display:none;">
+<!-- APPLICATION -->
+<div id="app">
   <div class="sidebar">
-    <div class="sidebar-header"><i class="fas fa-chart-line"></i><span>Menu Principal</span></div>
+    <div class="sidebar-header"><i class="fas fa-layer-group"></i><span>Navigation</span></div>
     <nav class="sidebar-nav">
-      <!-- Menu Caisse -->
       <div class="nav-group">
-        <div class="nav-parent" onclick="toggleSubmenu('submenuCaisse')">
-          <i class="fas fa-money-bill-wave"></i>
-          <span>Caisse</span>
-          <i class="fas fa-chevron-down submenu-arrow"></i>
+        <div class="nav-parent" onclick="toggleSubmenu('subCaisse')">
+          <i class="fas fa-money-bill-wave"></i><span>Caisse</span><i class="fas fa-chevron-down submenu-arrow"></i>
         </div>
-        <div id="submenuCaisse" class="submenu" style="display: none;">
-          <button class="nav-item sub-item" data-page="caisse">
-            <i class="fas fa-plus-circle"></i><span>Insertion</span>
-          </button>
-          <button class="nav-item sub-item" data-page="consultCaisse">
-            <i class="fas fa-chart-simple"></i><span>Consultation</span>
-          </button>
+        <div id="subCaisse" class="submenu" style="display:none;">
+          <button class="nav-item" data-page="caisse"><i class="fas fa-plus-circle"></i><span>Insertion</span></button>
+          <button class="nav-item" data-page="consultCaisse"><i class="fas fa-edit"></i><span>Consultation</span></button>
         </div>
       </div>
-
-      <!-- Menu CCT1 -->
       <div class="nav-group">
-        <div class="nav-parent" onclick="toggleSubmenu('submenuCCT1')">
-          <i class="fas fa-file-invoice"></i>
-          <span>CCT1</span>
-          <i class="fas fa-chevron-down submenu-arrow"></i>
+        <div class="nav-parent" onclick="toggleSubmenu('subCCT1')">
+          <i class="fas fa-file-invoice"></i><span>CCT1</span><i class="fas fa-chevron-down submenu-arrow"></i>
         </div>
-        <div id="submenuCCT1" class="submenu" style="display: none;">
-          <button class="nav-item sub-item" data-page="cct1">
-            <i class="fas fa-plus-circle"></i><span>Insertion</span>
-          </button>
-          <button class="nav-item sub-item" data-page="consultCCT1">
-            <i class="fas fa-magnifying-glass-chart"></i><span>Consultation</span>
-          </button>
+        <div id="subCCT1" class="submenu" style="display:none;">
+          <button class="nav-item" data-page="cct1"><i class="fas fa-plus-circle"></i><span>Insertion</span></button>
+          <button class="nav-item" data-page="consultCCT1"><i class="fas fa-eye"></i><span>Consultation</span></button>
         </div>
       </div>
     </nav>
-    <div class="sidebar-footer"><div class="version">v5.0 - Sous-menus</div></div>
+    <div class="sidebar-footer" style="padding:16px; font-size:11px; text-align:center;"><strong>version 1.0.0</strong></div>
   </div>
 
   <div class="content">
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-
     <!-- Formulaire Caisse -->
-    <form id="formCaisse" method="POST" action="https://script.google.com/macros/s/AKfycbyqh6bXsgRAdfrYU6NKCecArFXdWu2fMFV_AFR5FowQRoLgQ87EiK7-_YK5vYwHdF77mA/exec" target="hidden_iframe" class="glass-form">
-      <div class="form-header"><i class="fas fa-coins"></i><h2>Formulaire Caisse</h2><span class="form-badge">Nouvelle transaction</span></div>
+    <form id="formCaisse" class="glass-form" style="display:none;">
+      <div class="form-header"><i class="fas fa-coins"></i><h2>Nouvelle transaction Caisse</h2></div>
       <input type="hidden" name="sheet" value="caisse">
-      <div class="form-two-columns">
-        <div class="form-col">
+      <div class="form-grid">
+        <div class="form-block">
           <div class="form-group"><label><i class="far fa-calendar-alt"></i> Date *</label><input type="date" name="DATE" required></div>
-          <div class="form-group"><label><i class="fas fa-building"></i> Société</label><input type="text" name="SOCIETE" placeholder="Nom de la société"></div>
-          <div class="form-group"><label><i class="fas fa-diagram-project"></i> Département</label><input type="text" name="DEPARTEMENT" placeholder="Département"></div>
-          <div class="form-group"><label><i class="fas fa-user-tie"></i> DR/DA</label><input type="text" name="DR/DA" placeholder="DR ou DA"></div>
-          <div class="form-group"><label><i class="fas fa-tag"></i> RV SAGE/MANUEL</label><input type="text" name="RV SAGE/MANUEL" placeholder="Numéro RV"></div>
+          <div class="form-group"><label><i class="fas fa-building"></i> Société</label><input type="text" name="SOCIETE" placeholder="Nom société"></div>
+          <div class="form-group"><label><i class="fas fa-diagram-project"></i> Département</label><input type="text" name="DEPARTEMENT"></div>
+          <div class="form-group"><label><i class="fas fa-user-tie"></i> DR/DA</label><input type="text" name="DR/DA"></div>
+          <div class="form-group"><label><i class="fas fa-tag"></i> RV SAGE/MANUEL</label><input type="text" name="RV SAGE/MANUEL"></div>
           <div class="form-group"><label><i class="fas fa-credit-card"></i> Mode de paiement</label><select name="MODE DE PAIEMENT"><option value="">Sélectionner</option><option value="chèque">🏦 Chèque</option><option value="espece">💵 Espèce</option><option value="virement">💻 Virement</option></select></div>
           <div class="form-group"><label><i class="far fa-clock"></i> Échéance Banque</label><input type="date" name="ECHEANCE BANQUE"></div>
           <div class="form-group"><label><i class="fas fa-calendar-check"></i> Date versement</label><input type="date" name="DATE DE VERSEMENT"></div>
-          <div class="form-group"><label><i class="fas fa-university"></i> BQ Versement</label><input type="text" name="BQ VERSEMENT" placeholder="Banque"></div>
+          <div class="form-group"><label><i class="fas fa-university"></i> BQ Versement</label><input type="text" name="BQ VERSEMENT"></div>
         </div>
-        <div class="form-col">
-          <div class="form-group"><label><i class="fas fa-user"></i> Client</label><input type="text" name="CLIENT" placeholder="Nom client"></div>
-          <div class="form-group"><label><i class="fas fa-qrcode"></i> Code Client</label><input type="text" name="CODE CLIENT" placeholder="Code"></div>
-          <div class="form-group"><label><i class="fas fa-receipt"></i> Facture</label><input type="text" name="FACTURE" placeholder="N° facture"></div>
-          <div class="form-group"><label><i class="fas fa-align-left"></i> Libellé</label><input type="text" name="LIBELLE" placeholder="Description"></div>
-          <div class="form-group"><label><i class="fas fa-arrow-down"></i> Encaissement</label><input type="number" name="ENCAISSEMENT" step="0.01" placeholder="0.00"></div>
-          <div class="form-group"><label><i class="fas fa-arrow-up"></i> Décaissement</label><input type="number" name="DECAISSEMENT" step="0.01" placeholder="0.00"></div>
-          <div class="form-group"><label><i class="fas fa-coins"></i> Montant</label><input type="number" name="MONTANT" step="0.01" placeholder="0.00"></div>
-          <div class="form-group full-width"><label><i class="fas fa-pen"></i> Observation</label><textarea name="OBSERVATION" rows="3"></textarea></div>
+        <div class="form-block">
+          <div class="form-group"><label><i class="fas fa-user"></i> Client</label><input type="text" name="CLIENT"></div>
+          <div class="form-group"><label><i class="fas fa-qrcode"></i> Code Client</label><input type="text" name="CODE CLIENT"></div>
+          <div class="form-group"><label><i class="fas fa-receipt"></i> Facture</label><input type="text" name="FACTURE"></div>
+          <div class="form-group"><label><i class="fas fa-align-left"></i> Libellé</label><input type="text" name="LIBELLE"></div>
+          <div class="form-group"><label><i class="fas fa-arrow-down"></i> Encaissement</label><input type="number" step="0.01" name="ENCAISSEMENT"></div>
+          <div class="form-group"><label><i class="fas fa-arrow-up"></i> Décaissement</label><input type="number" step="0.01" name="DECAISSEMENT"></div>
+          <div class="form-group"><label><i class="fas fa-coins"></i> Montant</label><input type="number" step="0.01" name="MONTANT"></div>
+          <div class="form-group"><label><i class="fas fa-pen"></i> Observation</label><textarea name="OBSERVATION" rows="2"></textarea></div>
+          <div class="submit-btn-wrapper">
+            <button type="submit" class="submit-btn" id="submitCaisseBtn"><i class="fas fa-paper-plane"></i> <span>Envoyer</span></button>
+          </div>
         </div>
       </div>
-      <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Envoyer la transaction</button>
     </form>
 
     <!-- Formulaire CCT1 -->
-    <form id="formCCT1" method="POST" action="https://script.google.com/macros/s/AKfycbyqh6bXsgRAdfrYU6NKCecArFXdWu2fMFV_AFR5FowQRoLgQ87EiK7-_YK5vYwHdF77mA/exec" target="hidden_iframe" style="display:none;" class="glass-form">
-      <div class="form-header"><i class="fas fa-chart-line"></i><h2>Formulaire CCT1</h2><span class="form-badge">Suivi financier</span></div>
+    <form id="formCCT1" class="glass-form" style="display:none;">
+      <div class="form-header"><i class="fas fa-chart-line"></i><h2>Nouvel enregistrement CCT1</h2></div>
       <input type="hidden" name="sheet" value="cct1">
-      <div class="form-two-columns">
-        <div class="form-col">
+      <div class="form-grid">
+        <div class="form-block">
           <div class="form-group"><label><i class="far fa-calendar-alt"></i> Date *</label><input type="date" name="DATE" required></div>
-          <div class="form-group"><label><i class="fas fa-hashtag"></i> N°RV</label><input type="text" name="N°RV" placeholder="Numéro RV"></div>
-          <div class="form-group"><label><i class="fas fa-user-tie"></i> DR-DA</label><input type="text" name="DR-DA" placeholder="DR ou DA"></div>
-          <div class="form-group"><label><i class="fas fa-align-left"></i> Libellé</label><input type="text" name="LIBELLE" placeholder="Description"></div>
-          <div class="form-group"><label><i class="fas fa-arrow-down"></i> Recette</label><input type="number" name="RECETTE" step="0.01" placeholder="0.00"></div>
+          <div class="form-group"><label><i class="fas fa-hashtag"></i> N°RV</label><input type="text" name="N°RV"></div>
+          <div class="form-group"><label><i class="fas fa-user-tie"></i> DR-DA</label><input type="text" name="DR-DA"></div>
+          <div class="form-group"><label><i class="fas fa-align-left"></i> Libellé</label><input type="text" name="LIBELLE"></div>
         </div>
-        <div class="form-col">
-          <div class="form-group"><label><i class="fas fa-arrow-up"></i> Dépense</label><input type="number" name="DEPENSE" step="0.01" placeholder="0.00"></div>
-          <div class="form-group"><label><i class="fas fa-balance-scale"></i> Solde</label><input type="number" name="SOLDE" step="0.01" placeholder="0.00"></div>
-          <div class="form-group"><label><i class="fas fa-building"></i> Sociétés</label><input type="text" name="SOCIETES" placeholder="Sociétés concernées"></div>
-          <div class="form-group full-width"><label><i class="fas fa-comment"></i> Commentaires</label><textarea name="COMMENTAIRES" rows="3"></textarea></div>
+        <div class="form-block">
+          <div class="form-group"><label><i class="fas fa-arrow-down"></i> Recette</label><input type="number" step="0.01" name="RECETTE"></div>
+          <div class="form-group"><label><i class="fas fa-arrow-up"></i> Dépense</label><input type="number" step="0.01" name="DEPENSE"></div>
+          <div class="form-group"><label><i class="fas fa-balance-scale"></i> Solde</label><input type="number" step="0.01" name="SOLDE"></div>
+          <div class="form-group"><label><i class="fas fa-building"></i> Sociétés</label><input type="text" name="SOCIETES"></div>
         </div>
+        <div class="form-group full-width" style="grid-column: span 2;"><label><i class="fas fa-comment"></i> Commentaires</label><textarea name="COMMENTAIRES" rows="2"></textarea></div>
       </div>
-      <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Envoyer les données</button>
+      <button type="submit" class="submit-btn" id="submitCCT1Btn"><i class="fas fa-paper-plane"></i> <span>Envoyer</span></button>
     </form>
 
     <!-- Consultation Caisse -->
-    <div id="consultCaisse" style="display:none;" class="consult-section">
-      <div class="section-header">
-        <h2><i class="fas fa-chart-simple"></i> Consultation Caisse</h2>
-        <div class="stats-card"><span>Total transactions</span><strong id="totalCountCaisse">0</strong></div>
-      </div>
+    <div id="consultCaisse" class="consult-section" style="display:none;">
+      <div class="section-header"><h2><i class="fas fa-table"></i> Consultation Caisse</h2><div class="stats-card"><span>Total</span><strong id="totalCaisse">0</strong></div></div>
       <div class="filter-bar">
         <div class="filter-group"><i class="fas fa-search"></i><input id="searchCaisse" placeholder="Rechercher..."></div>
-        <div class="filter-group"><i class="fas fa-building"></i><select id="filterSocieteCaisse"></select></div>
-        <button onclick="applyFilter('caisse')" class="btn-filter"><i class="fas fa-filter"></i> Filtrer</button>
-        <button onclick="exportExcel('caisse')" class="btn-export"><i class="fas fa-file-excel"></i> Export Excel</button>
-        <button onclick="resetFilters('caisse')" class="btn-reset"><i class="fas fa-undo-alt"></i> Réinitialiser</button>
+        <div class="filter-group"><i class="fas fa-building"></i><select id="societeFilterCaisse"></select></div>
+        <button class="btn-filter" onclick="applyFilter('caisse')"><i class="fas fa-filter"></i> Filtrer</button>
+        <button class="btn-export" onclick="exportCSV('caisse')"><i class="fas fa-file-excel"></i> Export</button>
+        <button class="btn-reset" onclick="resetFilters('caisse')"><i class="fas fa-undo"></i> Reset</button>
       </div>
       <div class="double-table-wrapper">
         <div id="tableCaisse" class="table-body"></div>
@@ -135,17 +346,14 @@
     </div>
 
     <!-- Consultation CCT1 -->
-    <div id="consultCCT1" style="display:none;" class="consult-section">
-      <div class="section-header">
-        <h2><i class="fas fa-magnifying-glass-chart"></i> Consultation CCT1</h2>
-        <div class="stats-card"><span>Total enregistrements</span><strong id="totalCountCCT1">0</strong></div>
-      </div>
+    <div id="consultCCT1" class="consult-section" style="display:none;">
+      <div class="section-header"><h2><i class="fas fa-table-list"></i> Consultation CCT1</h2><div class="stats-card"><span>Total</span><strong id="totalCCT1">0</strong></div></div>
       <div class="filter-bar">
         <div class="filter-group"><i class="fas fa-search"></i><input id="searchCCT1" placeholder="Rechercher..."></div>
-        <div class="filter-group"><i class="fas fa-building"></i><select id="filterSocieteCCT1"></select></div>
-        <button onclick="applyFilter('cct1')" class="btn-filter"><i class="fas fa-filter"></i> Filtrer</button>
-        <button onclick="exportExcel('cct1')" class="btn-export"><i class="fas fa-file-excel"></i> Export Excel</button>
-        <button onclick="resetFilters('cct1')" class="btn-reset"><i class="fas fa-undo-alt"></i> Réinitialiser</button>
+        <div class="filter-group"><i class="fas fa-building"></i><select id="societeFilterCCT1"></select></div>
+        <button class="btn-filter" onclick="applyFilter('cct1')"><i class="fas fa-filter"></i> Filtrer</button>
+        <button class="btn-export" onclick="exportCSV('cct1')"><i class="fas fa-file-excel"></i> Export</button>
+        <button class="btn-reset" onclick="resetFilters('cct1')"><i class="fas fa-undo"></i> Reset</button>
       </div>
       <div class="double-table-wrapper">
         <div id="tableCCT1" class="table-body"></div>
@@ -153,18 +361,535 @@
     </div>
 
     <!-- Modal Édition -->
-    <div id="modalEdit" class="modal">
+    <div id="editModal" class="modal">
       <div class="modal-content">
-        <div class="modal-header"><h3><i class="fas fa-edit"></i> Modifier</h3><span class="close-modal" onclick="closeModal()">&times;</span></div>
-        <div class="modal-body">
-          <!-- Les champs seront injectés dynamiquement -->
-        </div>
-        <div class="modal-footer"><button onclick="saveEdit()" class="btn-save"><i class="fas fa-save"></i> Enregistrer</button><button onclick="closeModal()" class="btn-cancel"><i class="fas fa-times"></i> Annuler</button></div>
+        <div class="modal-header"><h3><i class="fas fa-pen"></i> Modifier la ligne</h3><span class="close-modal" onclick="closeEditModal()">&times;</span></div>
+        <div class="modal-body" id="editModalBody"></div>
+        <div class="modal-footer"><button class="btn-save" onclick="saveEdit()"><i class="fas fa-save"></i> Enregistrer</button><button class="btn-cancel" onclick="closeEditModal()"><i class="fas fa-times"></i> Annuler</button></div>
       </div>
     </div>
   </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbz35dNMMs7lZnri7kD3KFL5C2bqgxHCLd1dp-JhnCi2hn8X_BgHWe0rjBvcO90dP8pl8A/exec";
+  
+  let caisseData = [], cct1Data = [];
+  let filteredCaisse = [], filteredCct1 = [];
+  let sortState = { caisse: { col: null, dir: 'asc' }, cct1: { col: null, dir: 'asc' } };
+  let currentEdit = { type: null, row: null, oldValues: null };
+  let refreshInterval = null;
+  let columnFilters = { caisse: {}, cct1: {} };
+
+  function getPassword() { return sessionStorage.getItem('appPassword'); }
+  function setPassword(pwd) { sessionStorage.setItem('appPassword', pwd); }
+  function clearPassword() { sessionStorage.removeItem('appPassword'); }
+
+  (function checkAutoLogin() {
+    const savedPwd = getPassword();
+    if (savedPwd) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('logoutBtn').style.display = 'inline-flex';
+      showForm('caisse');
+      loadAllData().catch(e => console.warn(e));
+      startAutoRefresh();
+    }
+  })();
+
+  function logout() {
+    clearPassword();
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    const btn = document.getElementById('loginBtn');
+    const btnText = document.getElementById('loginBtnText');
+    btn.disabled = false;
+    btnText.innerHTML = 'Connexion sécurisée';
+    stopAutoRefresh();
+  }
+
+  async function fetchWithAuth(url, options = {}) {
+    const pwd = getPassword();
+    if (!pwd) throw new Error("Non authentifié");
+    const separator = url.includes('?') ? '&' : '?';
+    const authUrl = `${url}${separator}pwd=${encodeURIComponent(pwd)}`;
+    const response = await fetch(authUrl, options);
+    if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
+    const data = await response.json();
+    if (!data.success) {
+      if (data.error && data.error.includes("Mot de passe")) logout();
+      throw new Error(data.error || "Erreur serveur");
+    }
+    return data;
+  }
+
+  function isoToFrDate(isoString) {
+    if (!isoString || typeof isoString !== 'string') return isoString;
+    const parts = isoString.split('-');
+    if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    return isoString;
+  }
+  function formatDateForDisplay(value) {
+    if (!value) return value;
+    const str = String(value).trim();
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+      const [y, m, d] = str.split('-');
+      return `${d}/${m}/${y}`;
+    }
+    return str;
+  }
+
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = msg;
+    toast.style.background = isError ? '#ef4444' : '#0f172a';
+    toast.style.display = 'flex';
+    setTimeout(() => toast.style.display = 'none', 3000);
+  }
+
+  function toggleSubmenu(id) {
+    const el = document.getElementById(id);
+    const arrow = el.previousElementSibling.querySelector('.submenu-arrow');
+    el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+    arrow.style.transform = el.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
+  }
+
+  document.getElementById('loginBtn').onclick = async () => {
+    const password = document.getElementById('passwordInput').value;
+    const errorDiv = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+    const btnText = document.getElementById('loginBtnText');
+    errorDiv.style.display = 'none';
+    if (password.length < 4) {
+      errorDiv.textContent = "Mot de passe trop court (min. 4)";
+      errorDiv.style.display = 'block';
+      return;
+    }
+    btn.disabled = true;
+    btnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'login', pwd: password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPassword(password);
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('logoutBtn').style.display = 'inline-flex';
+        document.getElementById('passwordInput').value = '';
+        showForm('caisse');
+        loadAllData().catch(e => showToast('Erreur chargement données', true));
+        startAutoRefresh();
+      } else {
+        errorDiv.textContent = data.error || "Mot de passe incorrect";
+        errorDiv.style.display = 'block';
+        btn.disabled = false;
+        btnText.innerHTML = 'Connexion sécurisée';
+      }
+    } catch(e) {
+      errorDiv.textContent = "Erreur de connexion";
+      errorDiv.style.display = 'block';
+      btn.disabled = false;
+      btnText.innerHTML = 'Connexion sécurisée';
+    }
+  };
+
+  document.getElementById('passwordInput').addEventListener('keypress', e => { if(e.key==='Enter') document.getElementById('loginBtn').click(); });
+  document.getElementById('logoutBtn').onclick = () => logout();
+
+  function startAutoRefresh() { if(refreshInterval) clearInterval(refreshInterval); refreshInterval = setInterval(silentRefresh, 10000); }
+  function stopAutoRefresh() { if(refreshInterval) clearInterval(refreshInterval); refreshInterval = null; }
+
+  async function silentRefresh() {
+    if (document.getElementById('editModal').style.display === 'flex') return;
+    const activeEl = document.activeElement;
+    if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) return;
+    if (!getPassword()) { logout(); return; }
+    try {
+      const data = await fetchWithAuth(`${API_URL}?action=getAll`);
+      const newCaisse = data.caisse || [];
+      const newCct1 = data.cct1 || [];
+      if (caisseData.length !== newCaisse.length || JSON.stringify(caisseData) !== JSON.stringify(newCaisse)) {
+        caisseData = newCaisse;
+        initFilters('caisse');
+        if (document.getElementById('consultCaisse').style.display === 'block') applyFilter('caisse');
+        else renderTable('caisse');
+      }
+      if (cct1Data.length !== newCct1.length || JSON.stringify(cct1Data) !== JSON.stringify(newCct1)) {
+        cct1Data = newCct1;
+        initFilters('cct1');
+        if (document.getElementById('consultCCT1').style.display === 'block') applyFilter('cct1');
+        else renderTable('cct1');
+      }
+    } catch(e) { console.warn(e); }
+  }
+
+  async function loadAllData() {
+    const data = await fetchWithAuth(`${API_URL}?action=getAll`);
+    caisseData = data.caisse || [];
+    cct1Data = data.cct1 || [];
+    initFilters('caisse');
+    initFilters('cct1');
+    renderTable('caisse');
+    renderTable('cct1');
+    updateTotalCounts();
+    showToast(`✅ ${caisseData.length} caisse, ${cct1Data.length} cct1`);
+  }
+
+  function initFilters(type) {
+    const data = type === 'caisse' ? caisseData : cct1Data;
+    const select = document.getElementById(type === 'caisse' ? 'societeFilterCaisse' : 'societeFilterCCT1');
+    if (!select) return;
+    const societes = [...new Set(data.map(r => String(r.SOCIETE || r.SOCIETES || '').trim()).filter(Boolean))].sort();
+    select.innerHTML = '<option value="">Toutes</option>' + societes.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    const searchInput = document.getElementById(type === 'caisse' ? 'searchCaisse' : 'searchCCT1');
+    if (searchInput && !searchInput.dataset.listener) {
+      searchInput.addEventListener('input', debounce(() => applyFilter(type), 300));
+      searchInput.dataset.listener = true;
+    }
+  }
+
+  function debounce(fn, delay) { let t; return () => { clearTimeout(t); t = setTimeout(fn, delay); }; }
+
+  function applyFilter(type) {
+    const data = type === 'caisse' ? caisseData : cct1Data;
+    const search = document.getElementById(type === 'caisse' ? 'searchCaisse' : 'searchCCT1')?.value.toLowerCase() || '';
+    const societe = document.getElementById(type === 'caisse' ? 'societeFilterCaisse' : 'societeFilterCCT1')?.value.toLowerCase() || '';
+    const colFilters = columnFilters[type] || {};
+    const filtered = data.filter(row => {
+      const text = type === 'caisse' ? `${row.CLIENT||''} ${row.LIBELLE||''} ${row.FACTURE||''}`.toLowerCase() : `${row.LIBELLE||''} ${row.COMMENTAIRES||''} ${row.SOCIETES||''}`.toLowerCase();
+      if (search && !text.includes(search)) return false;
+      const soc = String(row.SOCIETE || row.SOCIETES || '').toLowerCase();
+      if (societe && soc !== societe) return false;
+      for (let col in colFilters) {
+        const filterVal = colFilters[col];
+        if (filterVal === '') continue;
+        const cellVal = String(row[col] || '').toLowerCase();
+        if (!cellVal.includes(filterVal.toLowerCase())) return false;
+      }
+      return true;
+    });
+    if (type === 'caisse') filteredCaisse = filtered; else filteredCct1 = filtered;
+    renderTable(type, filtered);
+    updateTotalCounts();
+  }
+
+  function resetFilters(type) {
+    document.getElementById(type === 'caisse' ? 'searchCaisse' : 'searchCCT1').value = '';
+    document.getElementById(type === 'caisse' ? 'societeFilterCaisse' : 'societeFilterCCT1').value = '';
+    sortState[type] = { col: null, dir: 'asc' };
+    columnFilters[type] = {};
+    applyFilter(type);
+  }
+
+  function adjustContainerPadding(type) {
+    const consultDiv = document.getElementById(type === 'caisse' ? 'consultCaisse' : 'consultCCT1');
+    if (!consultDiv) return;
+    const sectionHeader = consultDiv.querySelector('.section-header');
+    const filterBar = consultDiv.querySelector('.filter-bar');
+    if (sectionHeader && filterBar) {
+      const headerHeight = sectionHeader.offsetHeight;
+      const filterHeight = filterBar.offsetHeight;
+      const totalOffset = headerHeight + filterHeight;
+      const wrapper = consultDiv.querySelector('.double-table-wrapper');
+      if (wrapper) {
+        wrapper.style.paddingTop = totalOffset + 'px';
+      }
+    }
+  }
+
+  function renderTable(type, data = null) {
+    const source = data || (type === 'caisse' ? caisseData : cct1Data);
+    const container = document.getElementById(type === 'caisse' ? 'tableCaisse' : 'tableCCT1');
+    const wrapper = container.closest('.double-table-wrapper');
+    if (!wrapper) return;
+
+    const sortCol = sortState[type].col;
+    const sortDir = sortState[type].dir;
+    let sorted = [...source];
+    if (sortCol) {
+      sorted.sort((a,b) => {
+        let va = a[sortCol], vb = b[sortCol];
+        let na = parseFloat(va), nb = parseFloat(vb);
+        if (!isNaN(na) && !isNaN(nb)) return sortDir === 'asc' ? na - nb : nb - na;
+        va = String(va).toLowerCase(); vb = String(vb).toLowerCase();
+        return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+      });
+    }
+
+    if (!sorted.length) { container.innerHTML = '<div style="padding:40px; text-align:center;">Aucune donnée</div>'; return; }
+    const headers = Object.keys(sorted[0]).filter(h => h !== '_uid');
+    const html = `<table><tbody>${sorted.map(row => `<tr>
+      <td style="text-align: center;"><button class="edit-btn" onclick="openEditModal('${type}', '${row._uid}')"><i class="fas fa-edit"></i></button></td>
+      ${headers.map(h => `<td>${escapeHtml(formatDateForDisplay(row[h] || ''))}</td>`).join('')}
+    </tr>`).join('')}</tbody></table>`;
+    container.innerHTML = html;
+
+    let fixedDiv = wrapper.querySelector('.table-fixed-header');
+    if (!fixedDiv) {
+      fixedDiv = document.createElement('div');
+      fixedDiv.className = 'table-fixed-header';
+      wrapper.insertBefore(fixedDiv, container);
+    }
+    const currentColFilters = columnFilters[type] || {};
+    let headerHtml = `<table><thead>`;
+    headerHtml += `<tr><th>Éditer</th>${headers.map(h => `<th data-col="${escapeHtml(h)}">${escapeHtml(h)} ${sortCol === h ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>`).join('')}</tr>`;
+    headerHtml += `<tr><th></th>${headers.map(h => `<th><input type="text" class="filter-input" data-col="${escapeHtml(h)}" placeholder="Filtrer ${escapeHtml(h)}" value="${escapeHtml(currentColFilters[h] || '')}"></th>`).join('')}</tr>`;
+    headerHtml += `</thead></table>`;
+    fixedDiv.innerHTML = headerHtml;
+
+    fixedDiv.querySelectorAll('th[data-col]').forEach(th => {
+      th.style.cursor = 'pointer';
+      th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (sortState[type].col === col) sortState[type].dir = sortState[type].dir === 'asc' ? 'desc' : 'asc';
+        else { sortState[type].col = col; sortState[type].dir = 'asc'; }
+        applyFilter(type);
+      });
+    });
+
+    fixedDiv.querySelectorAll('.filter-input').forEach(input => {
+      input.addEventListener('input', debounce(() => {
+        const col = input.dataset.col;
+        const val = input.value;
+        if (!columnFilters[type]) columnFilters[type] = {};
+        columnFilters[type][col] = val;
+        applyFilter(type);
+      }, 300));
+    });
+
+    const syncScroll = (src, tgt) => { if (src && tgt) src.onscroll = () => { tgt.scrollLeft = src.scrollLeft; }; };
+    syncScroll(container, fixedDiv);
+    syncScroll(fixedDiv, container);
+    setTimeout(() => {
+      syncColumnWidths(type);
+      adjustContainerPadding(type);
+    }, 20);
+    setTimeout(() => adjustContainerPadding(type), 100);
+  }
+
+  function syncColumnWidths(type) {
+    const body = document.getElementById(type === 'caisse' ? 'tableCaisse' : 'tableCCT1');
+    const fixed = body?.closest('.double-table-wrapper')?.querySelector('.table-fixed-header');
+    if (!body || !fixed) return;
+    const bodyTable = body.querySelector('table');
+    const headTable = fixed.querySelector('table');
+    if (!bodyTable || !headTable) return;
+    const cols = headTable.querySelectorAll('th').length;
+    let widths = Array(cols).fill(0);
+    headTable.querySelectorAll('th').forEach((th,i) => widths[i] = th.getBoundingClientRect().width);
+    bodyTable.querySelectorAll('tbody tr').forEach(tr => {
+      tr.querySelectorAll('td').forEach((td,i) => { if(i<cols) widths[i] = Math.max(widths[i], td.getBoundingClientRect().width); });
+    });
+    [bodyTable, headTable].forEach(t => {
+      let cg = t.querySelector('colgroup');
+      if(!cg) { cg = document.createElement('colgroup'); t.prepend(cg); }
+      cg.innerHTML = widths.map(w => `<col style="width:${w}px; min-width:${w}px;">`).join('');
+    });
+  }
+
+  function updateTotalCounts() {
+    document.getElementById('totalCaisse').innerText = filteredCaisse.length || caisseData.length;
+    document.getElementById('totalCCT1').innerText = filteredCct1.length || cct1Data.length;
+  }
+
+  function openEditModal(type, uid) {
+    const arr = type === 'caisse' ? caisseData : cct1Data;
+    const row = arr.find(r => r._uid === uid);
+    if (!row) return showToast("Ligne introuvable", true);
+    currentEdit = { type, row, oldValues: { ...row } };
+    const modalBody = document.getElementById('editModalBody');
+    modalBody.innerHTML = '';
+
+    if (type === 'caisse') {
+      const leftFields = ['DATE', 'SOCIETE', 'DEPARTEMENT', 'DR/DA', 'RV SAGE/MANUEL', 'MODE DE PAIEMENT', 'ECHEANCE BANQUE', 'DATE DE VERSEMENT', 'BQ VERSEMENT'];
+      const rightFields = ['CLIENT', 'CODE CLIENT', 'FACTURE', 'LIBELLE', 'ENCAISSEMENT', 'DECAISSEMENT', 'MONTANT', 'OBSERVATION'];
+      const existingLeft = leftFields.filter(f => row.hasOwnProperty(f));
+      const existingRight = rightFields.filter(f => row.hasOwnProperty(f));
+      existingLeft.forEach(field => {
+        const div = document.createElement('div'); div.className = 'edit-field';
+        div.innerHTML = `<label>${escapeHtml(field)}</label><input type="text" id="edit_${field}" value="${escapeHtml(row[field] || '')}">`;
+        modalBody.appendChild(div);
+      });
+      existingRight.forEach(field => {
+        const div = document.createElement('div'); div.className = 'edit-field';
+        div.innerHTML = `<label>${escapeHtml(field)}</label><input type="text" id="edit_${field}" value="${escapeHtml(row[field] || '')}">`;
+        modalBody.appendChild(div);
+      });
+    } else if (type === 'cct1') {
+      const leftFields = ['DATE', 'N°RV', 'DR-DA', 'LIBELLE'];
+      const rightFields = ['RECETTE', 'DEPENSE', 'SOLDE', 'SOCIETES'];
+      const commentField = 'COMMENTAIRES';
+      const existingLeft = leftFields.filter(f => row.hasOwnProperty(f));
+      const existingRight = rightFields.filter(f => row.hasOwnProperty(f));
+      existingLeft.forEach(field => {
+        const div = document.createElement('div'); div.className = 'edit-field';
+        div.innerHTML = `<label>${escapeHtml(field)}</label><input type="text" id="edit_${field}" value="${escapeHtml(row[field] || '')}">`;
+        modalBody.appendChild(div);
+      });
+      existingRight.forEach(field => {
+        const div = document.createElement('div'); div.className = 'edit-field';
+        div.innerHTML = `<label>${escapeHtml(field)}</label><input type="text" id="edit_${field}" value="${escapeHtml(row[field] || '')}">`;
+        modalBody.appendChild(div);
+      });
+      if (row.hasOwnProperty(commentField)) {
+        const div = document.createElement('div'); div.className = 'edit-field full-width';
+        div.innerHTML = `<label>${escapeHtml(commentField)}</label><input type="text" id="edit_${commentField}" value="${escapeHtml(row[commentField] || '')}">`;
+        modalBody.appendChild(div);
+      }
+    } else {
+      const headers = Object.keys(row).filter(h => h !== '_uid');
+      const half = Math.ceil(headers.length / 2);
+      const leftHeaders = headers.slice(0, half);
+      const rightHeaders = headers.slice(half);
+      leftHeaders.forEach(h => {
+        const div = document.createElement('div'); div.className = 'edit-field';
+        div.innerHTML = `<label>${escapeHtml(h)}</label><input type="text" id="edit_${h}" value="${escapeHtml(row[h] || '')}">`;
+        modalBody.appendChild(div);
+      });
+      rightHeaders.forEach(h => {
+        const div = document.createElement('div'); div.className = 'edit-field';
+        div.innerHTML = `<label>${escapeHtml(h)}</label><input type="text" id="edit_${h}" value="${escapeHtml(row[h] || '')}">`;
+        modalBody.appendChild(div);
+      });
+    }
+
+    document.getElementById('editModal').style.display = 'flex';
+    const allEditFields = Array.from(modalBody.querySelectorAll('input')).map(inp => inp.id.replace('edit_', ''));
+    document.getElementById('editModal').dataset.headers = JSON.stringify(allEditFields);
+  }
+
+  async function saveEdit() {
+    const { type, row, oldValues } = currentEdit;
+    if (!row) return;
+    const headers = JSON.parse(document.getElementById('editModal').dataset.headers || '[]');
+    headers.forEach(h => {
+      const input = document.getElementById(`edit_${h}`);
+      if (input) row[h] = input.value;
+    });
+    applyFilter(type);
+    closeEditModal();
+    showToast("Mise à jour en cours...");
+    const formData = new URLSearchParams();
+    formData.append('action', 'update');
+    formData.append('sheet', type);
+    formData.append('uid', row._uid);
+    for (let [k,v] of Object.entries(row)) if (k !== '_uid') formData.append(k, v);
+    try {
+      const data = await fetchWithAuth(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData });
+      if (data.success) showToast("✅ Modification enregistrée");
+      else throw new Error(data.error);
+    } catch(err) {
+      showToast("❌ Erreur serveur, restauration", true);
+      Object.assign(row, oldValues);
+      applyFilter(type);
+    }
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+    currentEdit = { type: null, row: null, oldValues: null };
+  }
+
+  function enableEnterNavigation(form) {
+    const inputs = Array.from(form.querySelectorAll('input, select, textarea'));
+    inputs.forEach((input, index) => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const next = inputs[index + 1];
+          if (next) next.focus();
+          else form.querySelector('button[type="submit"]')?.focus();
+        }
+      });
+    });
+  }
+  enableEnterNavigation(document.getElementById('formCaisse'));
+  enableEnterNavigation(document.getElementById('formCCT1'));
+
+  async function submitForm(formElement, btnElement) {
+    const originalHtml = btnElement.innerHTML;
+    btnElement.disabled = true;
+    btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+    const formData = new FormData(formElement);
+    const params = new URLSearchParams();
+    for (let [key, value] of formData.entries()) {
+      const inputField = formElement.querySelector(`[name="${key}"]`);
+      if (inputField && inputField.type === 'date' && value) value = isoToFrDate(value);
+      params.append(key, value);
+    }
+    try {
+      const data = await fetchWithAuth(API_URL, { method: 'POST', body: params });
+      if (data.success) {
+        showToast("Envoi réussi !");
+        formElement.reset();
+        loadAllData();
+      } else throw new Error(data.error);
+    } catch(e) {
+      showToast("Erreur envoi", true);
+    } finally {
+      btnElement.disabled = false;
+      btnElement.innerHTML = originalHtml;
+    }
+  }
+
+  document.getElementById('formCaisse').addEventListener('submit', e => {
+    e.preventDefault();
+    submitForm(e.target, document.getElementById('submitCaisseBtn'));
+  });
+  document.getElementById('formCCT1').addEventListener('submit', e => {
+    e.preventDefault();
+    submitForm(e.target, document.getElementById('submitCCT1Btn'));
+  });
+
+  function showForm(page) {
+    document.querySelectorAll('.glass-form, .consult-section').forEach(el => el.style.display = 'none');
+    if (page === 'caisse') document.getElementById('formCaisse').style.display = 'block';
+    else if (page === 'cct1') document.getElementById('formCCT1').style.display = 'block';
+    else if (page === 'consultCaisse') {
+      document.getElementById('consultCaisse').style.display = 'block';
+      applyFilter('caisse');
+    }
+    else if (page === 'consultCCT1') {
+      document.getElementById('consultCCT1').style.display = 'block';
+      applyFilter('cct1');
+    }
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.nav-item[data-page="${page}"]`)?.classList.add('active');
+  }
+  document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', () => showForm(btn.dataset.page)));
+
+  function exportCSV(type) {
+    const data = type === 'caisse' ? (filteredCaisse.length ? filteredCaisse : caisseData) : (filteredCct1.length ? filteredCct1 : cct1Data);
+    if (!data.length) return showToast("Aucune donnée", true);
+    const headers = Object.keys(data[0]).filter(h => h !== '_uid');
+    const csv = [headers.join(','), ...data.map(r => headers.map(h => JSON.stringify(r[h] || '')).join(','))].join('\n');
+    const blob = new Blob(["\uFEFF" + csv], {type: 'text/csv'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `${type}_${new Date().toISOString().slice(0,19)}.csv`; a.click();
+    URL.revokeObjectURL(a.href);
+    showToast(`Export ${type} terminé`);
+  }
+
+  function escapeHtml(str) { return String(str).replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+
+  window.addEventListener('resize', () => {
+    if (document.getElementById('consultCaisse').style.display === 'block') adjustContainerPadding('caisse');
+    if (document.getElementById('consultCCT1').style.display === 'block') adjustContainerPadding('cct1');
+  });
+
+  window.applyFilter = applyFilter;
+  window.resetFilters = resetFilters;
+  window.openEditModal = openEditModal;
+  window.closeEditModal = closeEditModal;
+  window.saveEdit = saveEdit;
+  window.exportCSV = exportCSV;
+  window.toggleSubmenu = toggleSubmenu;
+</script>
 </body>
 </html>
