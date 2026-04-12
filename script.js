@@ -403,7 +403,7 @@ function saveEdit() {
   const idx = arr.findIndex(r => r._row === rowId);
   if (idx !== -1) {
     headers.forEach((header, index) => {
-      const input = document.getElementById(`edit_${index}`);
+      const input = document.getElementById(`edit_${index}`) + 1;
       if (input) arr[idx][header] = input.value;
     });
     
