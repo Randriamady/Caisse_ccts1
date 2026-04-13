@@ -60,7 +60,7 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 1100; border-bottom: 1px solid rgba(0,0,0,0.05);
     }
     .logo-area { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .logo-area i { background: none; -webkit-background-cli: unset; color: var(--primary); font-size: 28px; }
+    .logo-area i { background: none; -webkit-background-clip: unset; color: var(--primary); font-size: 28px; }
     .badge { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-size: 11px; padding: 4px 10px; border-radius: 30px; font-weight: 600; }
     .btn-logout { padding: 10px 22px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.25s; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; background: var(--danger); color: white; }
     .btn-logout:hover { background: #dc2626; transform: translateY(-2px); }
@@ -627,7 +627,7 @@
 
     if (!sorted.length) { container.innerHTML = '<div style="padding:40px; text-align:center;">Aucune donnée</div>'; return; }
     const headers = Object.keys(sorted[0]).filter(h => h !== '_uid');
-    const html = `</table><tbody>${sorted.map(row => `<tr>
+    const html = `<table><tbody>${sorted.map(row => `<tr>
       <td style="text-align: center;"><button class="edit-btn" onclick="openEditModal('${type}', '${row._uid}')"><i class="fas fa-edit"></i></button></td>
       ${headers.map(h => `<td>${escapeHtml(formatDateForDisplay(row[h] || ''))}</td>`).join('')}
     </tr>`).join('')}</tbody></table>`;
@@ -831,10 +831,6 @@
       if (data.success) {
         showToast("Envoi réussi !");
         formElement.reset();
-        // Après reset, on réapplique la condition de verrouillage (si mode = chèque, les champs doivent être vides et readonly)
-        if (formElement.id === 'formCaisse' && window.updateCaisseLock) {
-          window.updateCaisseLock();
-        }
         loadAllData();
       } else throw new Error(data.error);
     } catch(e) {
@@ -889,7 +885,7 @@
     if (document.getElementById('consultCaisse').style.display === 'block') adjustContainerPadding('caisse');
     if (document.getElementById('consultCCT1').style.display === 'block') adjustContainerPadding('cct1');
   });
-
+  
   // ========== NOUVELLE FONCTIONNALITÉ : VERROUILLAGE DES CHAMPS SI MODE = CHÈQUE ==========
   function initCaisseFormConditions() {
     const modeSelect = document.querySelector('#formCaisse select[name="MODE DE PAIEMENT"]');
@@ -933,6 +929,7 @@
     initCaisseFormConditions();
   }
   // ========== FIN NOUVELLE FONCTIONNALITÉ ==========
+
 
   window.applyFilter = applyFilter;
   window.resetFilters = resetFilters;
