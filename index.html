@@ -108,10 +108,11 @@
     .form-block .submit-btn-wrapper { display: flex; justify-content: flex-end; margin-top: 16px; }
     /* ========== CONSULTATION ========== */
     .consult-section { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: visible; margin: 0; position: relative; }
+    /* Titre + total - fond brillant dégradé */
     .section-header {
       position: fixed; top: 72px; left: 280px; right: 0;
-      background: var(--table-header-bg);
-      backdrop-filter: blur(8px);
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1));
+      backdrop-filter: blur(12px);
       padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;
       color: #1e293b; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
     }
@@ -122,10 +123,13 @@
     }
     .stats-card span { font-size: 11px; }
     .stats-card strong { font-size: 18px; }
+    /* Barre de filtre - fond blanc brillant avec léger dégradé */
     .filter-bar {
       position: fixed; left: 280px; right: 0; top: calc(72px + 48px);
-      background: var(--light); padding: 8px 20px; display: flex; gap: 12px; flex-wrap: wrap;
+      background: linear-gradient(135deg, #ffffff, #f8fafc, #eef2ff);
+      padding: 8px 20px; display: flex; gap: 12px; flex-wrap: wrap;
       align-items: center; justify-content: flex-end; border-bottom: 1px solid #e2e8f0; z-index: 999;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
     .filter-group { flex: 0 1 auto; min-width: 180px; position: relative; }
     .filter-group i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 12px; }
@@ -138,14 +142,13 @@
     /* ========== TABLEAUX ========== */
     .double-table-wrapper {
       position: relative;
-      /* On va ajouter un padding-top dynamique via JS pour éviter le chevauchement */
     }
-    /* L'en-tête fixe du tableau devient sticky pour rester dans le flux */
+    /* En-tête fixe du tableau - fond brillant dégradé */
     .table-fixed-header {
       position: sticky;
       top: 0;
-      background: var(--table-header-bg);
-      backdrop-filter: blur(8px);
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.18), rgba(59, 130, 246, 0.12), rgba(139, 92, 246, 0.08));
+      backdrop-filter: blur(12px);
       z-index: 998;
       overflow-x: auto;
       border-radius: 10px 10px 0 0;
@@ -156,7 +159,7 @@
       background: transparent; color: #1e293b; padding: 8px 12px; font-size: 11px; font-weight: 700;
       white-space: nowrap; border-right: 1px solid rgba(0,0,0,0.05); cursor: pointer;
     }
-    .table-fixed-header th:first-child { position: sticky; left: 0; background: var(--table-header-bg); z-index: 25; min-width: 80px; width: 80px; text-align: center; }
+    .table-fixed-header th:first-child { position: sticky; left: 0; background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(59,130,246,0.15)); z-index: 25; min-width: 80px; width: 80px; text-align: center; }
     .table-fixed-header .filter-input {
       width: 100%; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px;
       background: white; color: #1e293b; font-size: 10px; margin-top: 4px; box-sizing: border-box;
@@ -624,7 +627,7 @@
 
     if (!sorted.length) { container.innerHTML = '<div style="padding:40px; text-align:center;">Aucune donnée</div>'; return; }
     const headers = Object.keys(sorted[0]).filter(h => h !== '_uid');
-    const html = `<table><tbody>${sorted.map(row => `<tr>
+    const html = `</table><tbody>${sorted.map(row => `<tr>
       <td style="text-align: center;"><button class="edit-btn" onclick="openEditModal('${type}', '${row._uid}')"><i class="fas fa-edit"></i></button></td>
       ${headers.map(h => `<td>${escapeHtml(formatDateForDisplay(row[h] || ''))}</td>`).join('')}
     </tr>`).join('')}</tbody></table>`;
@@ -828,6 +831,10 @@
       if (data.success) {
         showToast("Envoi réussi !");
         formElement.reset();
+        // Après reset, on réapplique la condition de verrouillage (si mode = chèque, les champs doivent être vides et readonly)
+        if (formElement.id === 'formCaisse' && window.updateCaisseLock) {
+          window.updateCaisseLock();
+        }
         loadAllData();
       } else throw new Error(data.error);
     } catch(e) {
@@ -882,6 +889,50 @@
     if (document.getElementById('consultCaisse').style.display === 'block') adjustContainerPadding('caisse');
     if (document.getElementById('consultCCT1').style.display === 'block') adjustContainerPadding('cct1');
   });
+
+  // ========== NOUVELLE FONCTIONNALITÉ : VERROUILLAGE DES CHAMPS SI MODE = CHÈQUE ==========
+  function initCaisseFormConditions() {
+    const modeSelect = document.querySelector('#formCaisse select[name="MODE DE PAIEMENT"]');
+    if (!modeSelect) return;
+    
+    // Champs à verrouiller et vider lorsque mode = chèque
+    const fieldsToLock = ['ECHEANCE BANQUE', 'DATE DE VERSEMENT', 'BQ VERSEMENT', 'CODE CLIENT'];
+    const inputs = {};
+    fieldsToLock.forEach(f => {
+      inputs[f] = document.querySelector(`#formCaisse [name="${f}"]`);
+    });
+    
+    function updateLock() {
+      const isCheque = (modeSelect.value === 'Espèce');
+      fieldsToLock.forEach(f => {
+        const input = inputs[f];
+        if (input) {
+          if (isCheque) {
+            input.readOnly = true;
+            input.value = '';
+            input.style.backgroundColor = '#f1f5f9';
+          } else {
+            input.readOnly = false;
+            input.style.backgroundColor = '';
+          }
+        }
+      });
+    }
+    
+    modeSelect.addEventListener('change', updateLock);
+    // Appliquer l'état initial (si par défaut le mode n'est pas chèque, tout est actif)
+    updateLock();
+    // Exposer la fonction pour pouvoir la rappeler après reset du formulaire
+    window.updateCaisseLock = updateLock;
+  }
+  
+  // Initialiser la condition sur le formulaire Caisse une fois le DOM chargé
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCaisseFormConditions);
+  } else {
+    initCaisseFormConditions();
+  }
+  // ========== FIN NOUVELLE FONCTIONNALITÉ ==========
 
   window.applyFilter = applyFilter;
   window.resetFilters = resetFilters;
