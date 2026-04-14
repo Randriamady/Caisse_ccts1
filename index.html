@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Votre style existant (inchangé) */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #ffffff; color: #1e293b; }
     :root {
@@ -20,10 +19,17 @@
       --table-header-bg: rgba(59, 130, 246, 0.15);
       --total-bg: rgba(59, 130, 246, 0.1);
     }
-    /* ... le reste du CSS identique à votre fichier ... */
-    /* (je conserve l'intégralité de votre CSS pour ne rien casser) */
-    #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(145deg, #f8fafc 0%, #eef2ff 100%); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 24px; }
-    .login-card { max-width: 480px; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-radius: 36px; padding: 48px 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); text-align: center; border: 1px solid rgba(255, 255, 255, 0.5); }
+    #loginScreen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(145deg, #f8fafc 0%, #eef2ff 100%);
+      display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 24px;
+    }
+    .login-card {
+      max-width: 480px; width: 100%; background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px); border-radius: 36px; padding: 48px 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
     .login-image { width: 160px; height: 160px; margin: 0 auto 24px; overflow: hidden; background: white; }
     .login-image img { width: 100%; height: 100%; object-fit: contain; }
     .login-card h1 { font-size: 32px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
@@ -32,13 +38,25 @@
     .password-field { margin-bottom: 24px; text-align: left; }
     .password-input-wrapper { position: relative; }
     .password-input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 18px; }
-    .password-input-wrapper input { width: 100%; padding: 14px 16px 14px 48px; border: 1.5px solid #e2e8f0; border-radius: 60px; font-size: 16px; font-family: 'Inter', sans-serif; transition: 0.2s; }
+    .password-input-wrapper input {
+      width: 100%; padding: 14px 16px 14px 48px; border: 1.5px solid #e2e8f0;
+      border-radius: 60px; font-size: 16px; font-family: 'Inter', sans-serif; transition: 0.2s;
+    }
     .password-input-wrapper input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-    .btn-login-large { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 16px 32px; border-radius: 60px; font-weight: 700; font-size: 18px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3); width: 100%; }
+    .btn-login-large {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white;
+      border: none; padding: 16px 32px; border-radius: 60px; font-weight: 700; font-size: 18px;
+      cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center;
+      gap: 12px; box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3); width: 100%;
+    }
     .btn-login-large:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4); }
     .btn-login-large:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
     .error-message { color: var(--danger); font-size: 13px; margin-top: 8px; display: none; }
-    .main-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); padding: 0 28px; height: 72px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-lg); position: fixed; top: 0; left: 0; right: 0; z-index: 1100; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .main-header {
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); padding: 0 28px; height: 72px;
+      display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-lg);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1100; border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
     .logo-area { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .logo-area i { background: none; -webkit-background-clip: unset; color: var(--primary); font-size: 28px; }
     .badge { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-size: 11px; padding: 4px 10px; border-radius: 30px; font-weight: 600; }
@@ -73,17 +91,36 @@
     .form-group input, .form-group select, .form-group textarea { flex: 1; padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 14px; font-family: 'Inter', sans-serif; transition: 0.2s; }
     .form-group textarea { resize: vertical; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-    .submit-btn { margin: 0 28px 28px auto; padding: 12px 28px; background: linear-gradient(135deg, var(--secondary), var(--secondary-dark)); color: white; border: none; border-radius: 40px; font-weight: 700; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; }
+    .submit-btn {
+      margin: 0 28px 28px auto; padding: 12px 28px; background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+      color: white; border: none; border-radius: 40px; font-weight: 700; cursor: pointer; transition: 0.2s;
+      display: inline-flex; align-items: center; gap: 10px; font-size: 14px;
+    }
     .submit-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
     .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
     .form-block .submit-btn-wrapper { display: flex; justify-content: flex-end; margin-top: 16px; }
     .consult-section { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: visible; margin: 0; position: relative; }
-    .section-header { position: fixed; top: 72px; left: 280px; right: 0; background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1)); backdrop-filter: blur(12px); padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; color: #1e293b; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .section-header {
+      position: fixed; top: 72px; left: 280px; right: 0;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1));
+      backdrop-filter: blur(12px);
+      padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;
+      color: #1e293b; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
     .section-header h2 { font-size: 16px; font-weight: 700; }
-    .stats-card { background: var(--total-bg); padding: 4px 12px; border-radius: 40px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+    .stats-card {
+      background: var(--total-bg); padding: 4px 12px; border-radius: 40px;
+      display: flex; align-items: center; gap: 8px; font-weight: 600;
+    }
     .stats-card span { font-size: 11px; }
     .stats-card strong { font-size: 18px; }
-    .filter-bar { position: fixed; left: 280px; right: 0; top: calc(72px + 48px); background: linear-gradient(135deg, #ffffff, #f8fafc, #eef2ff); padding: 8px 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: flex-end; border-bottom: 1px solid #e2e8f0; z-index: 999; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .filter-bar {
+      position: fixed; left: 280px; right: 0; top: calc(72px + 48px);
+      background: linear-gradient(135deg, #ffffff, #f8fafc, #eef2ff);
+      padding: 8px 20px; display: flex; gap: 12px; flex-wrap: wrap;
+      align-items: center; justify-content: flex-end; border-bottom: 1px solid #e2e8f0; z-index: 999;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
     .filter-group { flex: 0 1 auto; min-width: 180px; position: relative; }
     .filter-group i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 12px; }
     .filter-group input, .filter-group select { width: 100%; padding: 6px 10px 6px 32px; border: 1px solid #cbd5e1; border-radius: 30px; font-size: 12px; background: white; font-family: 'Inter', sans-serif; transition: 0.2s; }
@@ -93,17 +130,44 @@
     .btn-export { background: var(--secondary); color: white; } .btn-export:hover { background: var(--secondary-dark); transform: translateY(-1px); }
     .btn-reset { background: var(--gray); color: white; } .btn-reset:hover { background: #5a6268; transform: translateY(-1px); }
     .double-table-wrapper { position: relative; }
-    .table-fixed-header { position: sticky; top: 0; background: linear-gradient(135deg, rgba(79, 70, 229, 0.18), rgba(59, 130, 246, 0.12), rgba(139, 92, 246, 0.08)); backdrop-filter: blur(12px); z-index: 998; overflow-x: auto; border-radius: 10px 10px 0 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .table-fixed-header {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.18), rgba(59, 130, 246, 0.12), rgba(139, 92, 246, 0.08));
+      backdrop-filter: blur(12px);
+      z-index: 998;
+      overflow-x: auto;
+      border-radius: 10px 10px 0 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
     .table-fixed-header table { width: max-content; min-width: 100%; border-collapse: collapse; }
-    .table-fixed-header th { background: transparent; color: #1e293b; padding: 8px 12px; font-size: 11px; font-weight: 700; white-space: nowrap; border-right: 1px solid rgba(0,0,0,0.05); cursor: pointer; }
+    .table-fixed-header th {
+      background: transparent; color: #1e293b; padding: 8px 12px; font-size: 11px; font-weight: 700;
+      white-space: nowrap; border-right: 1px solid rgba(0,0,0,0.05); cursor: pointer;
+    }
     .table-fixed-header th:first-child { position: sticky; left: 0; background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(59,130,246,0.15)); z-index: 25; min-width: 80px; width: 80px; text-align: center; }
-    .table-fixed-header .filter-input { width: 100%; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; color: #1e293b; font-size: 10px; margin-top: 4px; box-sizing: border-box; }
+    .table-fixed-header .filter-input {
+      width: 100%; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px;
+      background: white; color: #1e293b; font-size: 10px; margin-top: 4px; box-sizing: border-box;
+    }
     .table-fixed-header .filter-input::placeholder { color: #64748b; font-size: 9px; }
     .table-fixed-header .filter-input:focus { outline: none; border-color: var(--primary); }
-    .table-body { overflow-x: auto; border-radius: 0 0 10px 10px; border: 1px solid #e2e8f0; border-top: none; background: white; }
+    .table-body {
+      overflow-x: auto;
+      border-radius: 0 0 10px 10px;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+      background: white;
+    }
     .table-body table { width: max-content; min-width: 100%; border-collapse: collapse; }
-    .table-body td { padding: 6px 10px; font-size: 11px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; white-space: nowrap; }
-    .table-body td:first-child { position: sticky; left: 0; background: white; z-index: 10; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.05); text-align: center; min-width: 80px; }
+    .table-body td {
+      padding: 6px 10px; font-size: 11px; border-bottom: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0; white-space: nowrap;
+    }
+    .table-body td:first-child {
+      position: sticky; left: 0; background: white; z-index: 10;
+      box-shadow: 2px 0 5px -2px rgba(0,0,0,0.05); text-align: center; min-width: 80px;
+    }
     .table-body tr:hover { background: #f8fafc; }
     .edit-btn { background: var(--warning); border: none; padding: 4px 10px; border-radius: 30px; cursor: pointer; color: white; font-size: 10px; transition: 0.2s; }
     .edit-btn:hover { background: #d97706; transform: scale(1.03); }
@@ -295,7 +359,7 @@
 </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbz35dNMMs7lZnri7kD3KFL5C2bqgxHCLd1dp-JhnCi2hn8X_BgHWe0rjBvcO90dP8pl8A/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbwNZsotP13BmzRkL740i2aR18eByoTVHUH7zUGXhkFeTm05MQ0wcXZVSxT1G44-hJE80A/exec";
   
   let caisseData = [], cct1Data = [];
   let filteredCaisse = [], filteredCct1 = [];
@@ -509,6 +573,18 @@
     }
   }
 
+  function formatDateForDisplay(value) {
+    if (value === null || value === undefined || value === '') return '';
+    const str = String(value).trim();
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+    let isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) {
+      const [_, y, m, d] = isoMatch;
+      return `${d}/${m}/${y}`;
+    }
+    return str;
+  }
+
   function renderTable(type, data = null) {
     const source = data || (type === 'caisse' ? caisseData : cct1Data);
     const container = document.getElementById(type === 'caisse' ? 'tableCaisse' : 'tableCCT1');
@@ -533,7 +609,7 @@
     const html = `<table><tbody>${sorted.map(row => `<tr>
       <td style="text-align: center;"><button class="edit-btn" onclick="openEditModal('${type}', '${row._uid}')"><i class="fas fa-edit"></i></button></td>
       ${headers.map(h => `<td>${escapeHtml(formatDateForDisplay(row[h] || ''))}</td>`).join('')}
-    </tr>`).join('')}</tbody></table>`;
+    </tr>`).join('')}</tbody></td>`;
     container.innerHTML = html;
 
     let fixedDiv = wrapper.querySelector('.table-fixed-header');
@@ -718,7 +794,6 @@
   enableEnterNavigation(document.getElementById('formCaisse'));
   enableEnterNavigation(document.getElementById('formCCT1'));
 
-  // Fonction submitForm corrigée : envoi des dates en YYYY-MM-DD (sans conversion)
   async function submitForm(formElement, btnElement) {
     const originalHtml = btnElement.innerHTML;
     btnElement.disabled = true;
@@ -726,26 +801,21 @@
     const formData = new FormData(formElement);
     const params = new URLSearchParams();
     for (let [key, value] of formData.entries()) {
-      // Ne pas convertir les dates : les conserver en YYYY-MM-DD
       params.append(key, value);
     }
+    // Débogage : afficher la valeur de ECHEANCE BANQUE
+    console.log("=== Envoi formulaire Caisse ===");
+    console.log("ECHEANCE BANQUE =", params.get("ECHEANCE BANQUE"));
+    console.log("DATE DE VERSEMENT =", params.get("DATE DE VERSEMENT"));
+    console.log("BQ VERSEMENT =", params.get("BQ VERSEMENT"));
+    console.log("CODE CLIENT =", params.get("CODE CLIENT"));
     try {
       const data = await fetchWithAuth(API_URL, { method: 'POST', body: params });
       if (data.success) {
         showToast("Envoi réussi !");
         formElement.reset();
-        // Déverrouillage forcé après reset (pour le formulaire Caisse)
-        if (formElement.id === 'formCaisse') {
-          const fieldsToUnlock = ['ECHEANCE BANQUE', 'DATE DE VERSEMENT', 'BQ VERSEMENT', 'CODE CLIENT'];
-          fieldsToUnlock.forEach(f => {
-            const input = document.querySelector(`#formCaisse [name="${f}"]`);
-            if (input) {
-              input.readOnly = false;
-              input.style.backgroundColor = '';
-            }
-          });
-          // Réapplique le verrouillage en fonction du mode actuel (reset => mode vide => aucun verrou)
-          if (window.updateCaisseLock) window.updateCaisseLock();
+        if (formElement.id === 'formCaisse' && window.updateCaisseLock) {
+          window.updateCaisseLock();
         }
         loadAllData();
       } else throw new Error(data.error);
@@ -802,7 +872,7 @@
     if (document.getElementById('consultCCT1').style.display === 'block') adjustContainerPadding('cct1');
   });
 
-  // VERROUILLAGE DES CHAMPS SI MODE = ESPECE (et non chèque)
+  // VERROUILLAGE SI MODE = ESPECE (sans vider les champs)
   function initCaisseFormConditions() {
     const modeSelect = document.querySelector('#formCaisse select[name="MODE DE PAIEMENT"]');
     if (!modeSelect) return;
@@ -820,8 +890,8 @@
         if (input) {
           if (isEspece) {
             input.readOnly = true;
-            input.value = '';
             input.style.backgroundColor = '#f1f5f9';
+            // On ne vide PAS la valeur
           } else {
             input.readOnly = false;
             input.style.backgroundColor = '';
@@ -839,23 +909,6 @@
     document.addEventListener('DOMContentLoaded', initCaisseFormConditions);
   } else {
     initCaisseFormConditions();
-  }
-
-  // Conversion pour affichage (YYYY-MM-DD → jj/mm/yyyy)
-  function formatDateForDisplay(value) {
-    if (value === null || value === undefined || value === '') return '';
-    const str = String(value).trim();
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
-    let isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})T/);
-    if (isoMatch) {
-      const [_, y, m, d] = isoMatch;
-      return `${d}/${m}/${y}`;
-    }
-    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
-      const [y, m, d] = str.split('-');
-      return `${d}/${m}/${y}`;
-    }
-    return str;
   }
 
   window.applyFilter = applyFilter;
