@@ -19,6 +19,7 @@
       --table-header-bg: rgba(59, 130, 246, 0.15);
       --total-bg: rgba(59, 130, 246, 0.1);
     }
+    /* ========== ÉCRAN DE CONNEXION ========== */
     #loginScreen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(145deg, #f8fafc 0%, #eef2ff 100%);
@@ -52,6 +53,7 @@
     .btn-login-large:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4); }
     .btn-login-large:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
     .error-message { color: var(--danger); font-size: 13px; margin-top: 8px; display: none; }
+    /* ========== HEADER ========== */
     .main-header {
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); padding: 0 28px; height: 72px;
       display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-lg);
@@ -62,9 +64,12 @@
     .badge { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-size: 11px; padding: 4px 10px; border-radius: 30px; font-weight: 600; }
     .btn-logout { padding: 10px 22px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.25s; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; background: var(--danger); color: white; }
     .btn-logout:hover { background: #dc2626; transform: translateY(-2px); }
+    /* ========== TOAST ========== */
     .toast-message { position: fixed; bottom: 24px; right: 24px; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); color: white; padding: 12px 20px; border-radius: 40px; font-weight: 500; z-index: 1200; display: none; align-items: center; gap: 12px; box-shadow: var(--shadow-lg); font-size: 14px; animation: slideUp 0.3s ease; }
     @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    /* ========== APP ========== */
     #app { display: none; min-height: calc(100vh - 72px); margin-top: 72px; }
+    /* ========== SIDEBAR ========== */
     .sidebar { position: fixed; left: 0; top: 72px; width: 280px; height: calc(100vh - 72px); background: var(--white); box-shadow: var(--shadow); display: flex; flex-direction: column; z-index: 100; }
     .sidebar-header { padding: 24px 24px 16px; font-weight: 700; font-size: 18px; color: var(--dark); display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e2e8f0; }
     .sidebar-nav { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; }
@@ -78,7 +83,9 @@
     .nav-item i { width: 24px; font-size: 16px; }
     .nav-item:hover { background: var(--light); color: var(--primary); transform: translateX(4px); }
     .nav-item.active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: var(--shadow-md); }
+    /* ========== CONTENT ========== */
     .content { margin-left: 280px; padding: 0; min-height: calc(100vh - 72px); width: calc(100% - 280px); position: relative; }
+    /* ========== FORMULAIRES ========== */
     .glass-form { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; margin: 24px; }
     .form-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 18px 28px; color: white; display: flex; align-items: center; gap: 14px; }
     .form-header i { font-size: 26px; }
@@ -99,7 +106,9 @@
     .submit-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
     .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
     .form-block .submit-btn-wrapper { display: flex; justify-content: flex-end; margin-top: 16px; }
+    /* ========== CONSULTATION ========== */
     .consult-section { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: visible; margin: 0; position: relative; }
+    /* Titre + total - fond brillant dégradé */
     .section-header {
       position: fixed; top: 72px; left: 280px; right: 0;
       background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1));
@@ -114,6 +123,7 @@
     }
     .stats-card span { font-size: 11px; }
     .stats-card strong { font-size: 18px; }
+    /* Barre de filtre - fond blanc brillant avec léger dégradé */
     .filter-bar {
       position: fixed; left: 280px; right: 0; top: calc(72px + 48px);
       background: linear-gradient(135deg, #ffffff, #f8fafc, #eef2ff);
@@ -129,7 +139,11 @@
     .btn-filter { background: var(--primary); color: white; } .btn-filter:hover { background: var(--primary-dark); transform: translateY(-1px); }
     .btn-export { background: var(--secondary); color: white; } .btn-export:hover { background: var(--secondary-dark); transform: translateY(-1px); }
     .btn-reset { background: var(--gray); color: white; } .btn-reset:hover { background: #5a6268; transform: translateY(-1px); }
-    .double-table-wrapper { position: relative; }
+    /* ========== TABLEAUX ========== */
+    .double-table-wrapper {
+      position: relative;
+    }
+    /* En-tête fixe du tableau - fond brillant dégradé */
     .table-fixed-header {
       position: sticky;
       top: 0;
@@ -173,6 +187,7 @@
     .edit-btn:hover { background: #d97706; transform: scale(1.03); }
     .table-body td:first-child .edit-btn { opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
     .table-body tr:hover td:first-child .edit-btn { opacity: 1; pointer-events: auto; }
+    /* ========== MODAL ========== */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 2000; justify-content: center; align-items: center; }
     .modal-content { background: white; width: 850px; max-width: 90%; max-height: 85vh; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; }
     .modal-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
@@ -185,6 +200,7 @@
     .modal-footer { padding: 16px 24px; display: flex; gap: 16px; border-top: 1px solid #e2e8f0; }
     .btn-save, .btn-cancel { flex: 1; padding: 10px; border-radius: 40px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
     .btn-save { background: var(--secondary); color: white; } .btn-cancel { background: var(--gray); color: white; }
+    /* RESPONSIVE */
     @media (max-width: 900px) {
       .sidebar { width: 100%; height: auto; position: relative; top: 0; flex-direction: row; overflow-x: auto; }
       .sidebar-header { display: none; } .sidebar-nav { flex-direction: row; padding: 12px; gap: 8px; }
@@ -359,7 +375,7 @@
 </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwNZsotP13BmzRkL740i2aR18eByoTVHUH7zUGXhkFeTm05MQ0wcXZVSxT1G44-hJE80A/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyaZLlFDhS5JLeU7wSNm-Keo94MGAVi62UFG4uNw8p-IwHhw-R3rN_rfr5B8W-8JEiMWQ/exec";
   
   let caisseData = [], cct1Data = [];
   let filteredCaisse = [], filteredCct1 = [];
@@ -409,6 +425,23 @@
       throw new Error(data.error || "Erreur serveur");
     }
     return data;
+  }
+
+  function isoToFrDate(isoString) {
+    if (!isoString || typeof isoString !== 'string') return isoString;
+    const parts = isoString.split('-');
+    if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    return isoString;
+  }
+  function formatDateForDisplay(value) {
+    if (!value) return value;
+    const str = String(value).trim();
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+      const [y, m, d] = str.split('-');
+      return `${d}/${m}/${y}`;
+    }
+    return str;
   }
 
   function showToast(msg, isError = false) {
@@ -573,18 +606,6 @@
     }
   }
 
-  function formatDateForDisplay(value) {
-    if (value === null || value === undefined || value === '') return '';
-    const str = String(value).trim();
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
-    let isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (isoMatch) {
-      const [_, y, m, d] = isoMatch;
-      return `${d}/${m}/${y}`;
-    }
-    return str;
-  }
-
   function renderTable(type, data = null) {
     const source = data || (type === 'caisse' ? caisseData : cct1Data);
     const container = document.getElementById(type === 'caisse' ? 'tableCaisse' : 'tableCCT1');
@@ -606,10 +627,10 @@
 
     if (!sorted.length) { container.innerHTML = '<div style="padding:40px; text-align:center;">Aucune donnée</div>'; return; }
     const headers = Object.keys(sorted[0]).filter(h => h !== '_uid');
-    const html = `<table><tbody>${sorted.map(row => `<tr>
+    const html = `</table><tbody>${sorted.map(row => `<tr>
       <td style="text-align: center;"><button class="edit-btn" onclick="openEditModal('${type}', '${row._uid}')"><i class="fas fa-edit"></i></button></td>
       ${headers.map(h => `<td>${escapeHtml(formatDateForDisplay(row[h] || ''))}</td>`).join('')}
-    </tr>`).join('')}</tbody></td>`;
+    </tr>`).join('')}</tbody></table>`;
     container.innerHTML = html;
 
     let fixedDiv = wrapper.querySelector('.table-fixed-header');
@@ -801,19 +822,16 @@
     const formData = new FormData(formElement);
     const params = new URLSearchParams();
     for (let [key, value] of formData.entries()) {
+      const inputField = formElement.querySelector(`[name="${key}"]`);
+      if (inputField && inputField.type === 'date' && value) value = isoToFrDate(value);
       params.append(key, value);
     }
-    // Débogage : afficher la valeur de ECHEANCE BANQUE
-    console.log("=== Envoi formulaire Caisse ===");
-    console.log("ECHEANCE BANQUE =", params.get("ECHEANCE BANQUE"));
-    console.log("DATE DE VERSEMENT =", params.get("DATE DE VERSEMENT"));
-    console.log("BQ VERSEMENT =", params.get("BQ VERSEMENT"));
-    console.log("CODE CLIENT =", params.get("CODE CLIENT"));
     try {
       const data = await fetchWithAuth(API_URL, { method: 'POST', body: params });
       if (data.success) {
         showToast("Envoi réussi !");
         formElement.reset();
+        // Après reset, on réapplique la condition de verrouillage (si mode = chèque, les champs doivent être vides et readonly)
         if (formElement.id === 'formCaisse' && window.updateCaisseLock) {
           window.updateCaisseLock();
         }
@@ -872,11 +890,12 @@
     if (document.getElementById('consultCCT1').style.display === 'block') adjustContainerPadding('cct1');
   });
 
-  // VERROUILLAGE SI MODE = ESPECE (sans vider les champs)
+  // ========== NOUVELLE FONCTIONNALITÉ : VERROUILLAGE DES CHAMPS SI MODE = CHÈQUE ==========
   function initCaisseFormConditions() {
     const modeSelect = document.querySelector('#formCaisse select[name="MODE DE PAIEMENT"]');
     if (!modeSelect) return;
     
+    // Champs à verrouiller et vider lorsque mode = chèque
     const fieldsToLock = ['ECHEANCE BANQUE', 'DATE DE VERSEMENT', 'BQ VERSEMENT', 'CODE CLIENT'];
     const inputs = {};
     fieldsToLock.forEach(f => {
@@ -884,14 +903,14 @@
     });
     
     function updateLock() {
-      const isEspece = (modeSelect.value === 'espece');
+      const isCheque = (modeSelect.value === 'espece');
       fieldsToLock.forEach(f => {
         const input = inputs[f];
         if (input) {
-          if (isEspece) {
+          if (isCheque) {
             input.readOnly = true;
+            input.value = '';
             input.style.backgroundColor = '#f1f5f9';
-            // On ne vide PAS la valeur
           } else {
             input.readOnly = false;
             input.style.backgroundColor = '';
@@ -901,15 +920,19 @@
     }
     
     modeSelect.addEventListener('change', updateLock);
+    // Appliquer l'état initial (si par défaut le mode n'est pas chèque, tout est actif)
     updateLock();
+    // Exposer la fonction pour pouvoir la rappeler après reset du formulaire
     window.updateCaisseLock = updateLock;
   }
   
+  // Initialiser la condition sur le formulaire Caisse une fois le DOM chargé
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCaisseFormConditions);
   } else {
     initCaisseFormConditions();
   }
+  // ========== FIN NOUVELLE FONCTIONNALITÉ ==========
 
   window.applyFilter = applyFilter;
   window.resetFilters = resetFilters;
